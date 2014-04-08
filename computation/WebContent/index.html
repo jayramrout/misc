@@ -76,7 +76,7 @@ $( document ).ready(function() {
 			$.APP.stopTimer();
 			var allInputs = $(":input");
 			$('#dynamictable input').each(function(index,data) {
-				   var value = $(this).val();
+				   var value = $(this).val().trim();
 				   var name = $(this).attr("name");
 				   if(value != name){
 					   $( this ).css( "background-color", "#d9534f" );
