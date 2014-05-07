@@ -154,12 +154,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 		setVisible(true);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == clear) {
-			tabbedPaneController.clearAll();
-		}
-	}
 	/**
 	 * 
 	 * @param nodeStr
@@ -222,5 +216,11 @@ public class JSONViewer extends JFrame implements ActionListener{
 		}
 		long end_time = System.currentTimeMillis();
 //		System.out.println("Total Time = " + (end_time-start_time));
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == clear) {
+			tabbedPaneController.clearAll();
+		}
 	}
 }
