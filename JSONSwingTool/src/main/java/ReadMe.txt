@@ -1,3 +1,5 @@
+Drag and Drop the json file to the Application
+
 { "store": {
     "book": [ 
       { "category": "reference",
