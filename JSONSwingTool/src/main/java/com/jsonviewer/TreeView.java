@@ -48,7 +48,7 @@ public class TreeView extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            DefaultMutableTreeNode node = new DefaultMutableTreeNode("Case");
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode("JSONObject");
             if (array == null) {
                 HashMap<String, Object> fm = Helper.getMapFromJSONObject(object);
                 Helper.getNodeFromMap(fm, node);
