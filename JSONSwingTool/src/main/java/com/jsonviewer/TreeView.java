@@ -68,6 +68,5 @@ public class TreeView extends javax.swing.JPanel {
     }
     
     private javax.swing.JTree jsonTree;
-    private javax.swing.JScrollPane treeScrollPane;
 }
 
