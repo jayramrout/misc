@@ -31,22 +31,20 @@ import javax.swing.plaf.basic.BasicButtonUI;
  *
  */
 public class ButtonTabComponent extends JPanel {
-    private final JTabbedPane pane;
     private TabbedPaneController paneController;
-    public ButtonTabComponent(final JTabbedPane pane, final TabbedPaneController paneController) {
+    public ButtonTabComponent(final TabbedPaneController paneController) {
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        if (pane == null) {
+        if (paneController.jTabbedPane == null) {
             throw new NullPointerException("TabbedPane is null");
         }
-        this.pane = pane;
         this.paneController = paneController;
         setOpaque(false);
         
         JLabel label = new JLabel() {
             public String getText() {
-                int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+                int i = paneController.jTabbedPane.indexOfTabComponent(ButtonTabComponent.this);
                 if (i != -1) {
-                    return pane.getTitleAt(i);
+                    return paneController.jTabbedPane.getTitleAt(i);
                 }
                 return null;
             }
@@ -75,13 +73,13 @@ public class ButtonTabComponent extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+            int i = paneController.jTabbedPane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
             	String fileName = paneController.jTabbedPane.getToolTipTextAt(i);
             	Helper.fileList.remove(fileName);
-                pane.remove(i);
+            	paneController.jTabbedPane.remove(i);
             }
-            if(pane.getTabCount() == 0) {
+            if(paneController.jTabbedPane.getTabCount() == 0) {
             	paneController.clearAll();
             }
         }

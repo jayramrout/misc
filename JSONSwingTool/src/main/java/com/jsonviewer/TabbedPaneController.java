@@ -110,6 +110,6 @@ class TabbedPaneController {
 	}
 	
 	private void initTabComponent() {
-		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(), new ButtonTabComponent(jTabbedPane, this));
+		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(), new ButtonTabComponent(this));
 	}
 }
