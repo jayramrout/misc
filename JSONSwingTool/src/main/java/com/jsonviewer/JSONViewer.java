@@ -80,7 +80,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 		searchPanel.add(queryButton,BorderLayout.EAST);
 
 		final JTextArea consoleTextArea = new JTextArea();
-		consoleTextArea.setEditable(false);
+//		consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
@@ -103,7 +103,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 		
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				consoleTextArea.setText("");
+				//consoleTextArea.setText("");
 				queryJSON(m_searchText.getText());
 
 				// DefaultMutableTreeNode node =
@@ -160,7 +160,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 	 * @param nodeStr
 	 * @return
 	 */
-	public DefaultMutableTreeNode searchNode(String nodeStr) {
+	/*public DefaultMutableTreeNode searchNode(String nodeStr) {
 		DefaultMutableTreeNode node = null;
 
 		int selectedIndex = tabbedPaneController.jTabbedPane.getSelectedIndex();
@@ -175,7 +175,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 
 		System.out.println(JsonPath.read(json, nodeStr));
 
-		/*
+		
 		 * JScrollPane fileScrollPane =
 		 * (JScrollPane)tabbedPaneController.jTabbedPane.getSelectedComponent();
 		 * m_tree = (JTree)fileScrollPane.getViewport().getView(); m_model =
@@ -187,9 +187,9 @@ public class JSONViewer extends JFrame implements ActionListener{
 		 * (e.hasMoreElements()) { node = (DefaultMutableTreeNode)
 		 * e.nextElement(); if (nodeStr.equals(node.getUserObject().toString()))
 		 * { return node; } }
-		 */
+		 
 		return null;
-	}
+	}*/
 	/**
 	 * Query JSON String
 	 * @param nodeStr
@@ -199,8 +199,10 @@ public class JSONViewer extends JFrame implements ActionListener{
 		String fileName = tabbedPaneController.jTabbedPane.getToolTipTextAt(selectedIndex);
 		String json = null;
 		Scanner scanner = null;
+		File file = null;
 		try {
-			scanner = new Scanner(new File(fileName)).useDelimiter("\\Z");
+			file = new File(fileName);
+			scanner = new Scanner(file).useDelimiter("\\Z");
 			json = scanner.next();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -211,9 +213,9 @@ public class JSONViewer extends JFrame implements ActionListener{
 		String []queryString = nodeStr.split(",");
 		
 //		long start_time = System.currentTimeMillis();
-		
+		System.out.println("================FileName :"+ file.getName()+"===========================");
 		for(String query : queryString) {
-			System.out.println("=== "+query+" ====");
+			System.out.println("=== "+query+" :");
 			Object object = JsonPath.read(json, query);
 			if(object instanceof List){
 				List<Object> objList = (List<Object>)object;

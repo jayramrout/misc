@@ -48,3 +48,4 @@ Custom filters:
                 }
             };
 	List<Object> books = JsonPath.read(json, "$.store.book[?]", myFilter);
+
