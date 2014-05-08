@@ -215,7 +215,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 //		long start_time = System.currentTimeMillis();
 		System.out.println("================FileName :"+ file.getName()+"===========================");
 		for(String query : queryString) {
-			System.out.println("=== "+query+" :");
+			System.out.println("---"+query+"---");
 			Object object = JsonPath.read(json, query);
 			if(object instanceof List){
 				List<Object> objList = (List<Object>)object;
