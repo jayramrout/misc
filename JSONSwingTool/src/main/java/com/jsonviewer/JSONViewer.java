@@ -87,7 +87,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
 		
 		// keeps reference of standard output stream
-		standardOut = System.out;
+		//standardOut = System.out;
 		System.setOut(printStream);
 		System.setErr(printStream);
 
@@ -106,17 +106,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 			public void actionPerformed(ActionEvent e) {
 				//consoleTextArea.setText("");
 				queryJSON(m_searchText.getText());
-
-				// DefaultMutableTreeNode node =
-				// searchNode(m_searchText.getText());
-				/*
-				 * if (node != null) { TreeNode[] nodes =
-				 * m_model.getPathToRoot(node); TreePath path = new
-				 * TreePath(nodes); m_tree.scrollPathToVisible(path);
-				 * m_tree.setSelectionPath(path); } else {
-				 * System.out.println("Node with string " +
-				 * m_searchText.getText() + " not found"); }
-				 */
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);		
@@ -150,7 +139,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 			hostname = "to ";
 		}
 
-		setTitle("Welcome " + hostname + "New Heights JSON Query");
+		setTitle("Welcome " + hostname + " JSON Query");
 
 		setLocationRelativeTo(null);
 		setVisible(true);
@@ -220,24 +209,19 @@ public class JSONViewer extends JFrame implements ActionListener{
 				scanner.close();
 		}
 		String []queryString = nodeStr.split(",");
-		
-//		long start_time = System.currentTimeMillis();
-		System.out.println("================FileName :"+ file.getName()+"===========================");
+		System.out.println("================"+ file.getName()+"===========================");
 		for(String query : queryString) {
-			System.out.println("---"+query+"---");
+			System.out.println("\t"+query+":");
 			Object object = JsonPath.read(json, query);
 			if(object instanceof List){
 				List<Object> objList = (List<Object>)object;
 				for(Object obj : objList){
-					System.out.println(obj);
+					System.out.println("\t\t"+obj);
 				}
 			}else{
-				System.out.println(object);
+				System.out.println("\t\t"+object);
 			}
-//			System.out.println(JsonPath.read(json, query));	
 		}
-//		long end_time = System.currentTimeMillis();
-//		System.out.println("Total Time = " + (end_time-start_time));
 	}
 
 	public void actionPerformed(ActionEvent e) {
