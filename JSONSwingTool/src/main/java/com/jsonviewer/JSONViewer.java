@@ -4,11 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -69,30 +68,10 @@ public class JSONViewer extends JFrame implements ActionListener{
 		clearTabs.addActionListener(this);
 
 		m_searchText = new JTextField(70);
-		Font font = new Font("Courier", Font.PLAIN, 15);
+		Font font = new Font("Courier", Font.PLAIN, 13);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
-		m_searchText.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(e);
-			}
-		});
 		
-		m_searchText.addKeyListener(new KeyListener(){
-
-			public void keyTyped(KeyEvent e) {
-				System.out.println("keyTyped "+e);
-				m_searchText.setForeground(Color.RED);
-			}
-
-			public void keyPressed(KeyEvent e) {
-				System.out.println(" keyPressed "+e);
-			}
-
-			public void keyReleased(KeyEvent e) {
-				System.out.println("keyReleased "+e);
-			}
-		});
 		queryButton = new JButton("Query");
 		 
 		searchPanel.add(clearTabs , BorderLayout.WEST);
