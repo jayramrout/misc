@@ -42,7 +42,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 	TabbedPaneController tabbedPaneController;
 	DefaultMutableTreeNode root_defaultMutableTreeNode;
 	private DefaultTreeModel m_model;
-	private PrintStream standardOut;
 	JTree m_tree;
 	JButton clearTabs;
 	private JTextField m_searchText;
@@ -86,8 +85,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
 		
-		// keeps reference of standard output stream
-		//standardOut = System.out;
 		System.setOut(printStream);
 		System.setErr(printStream);
 
@@ -104,7 +101,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 		
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//consoleTextArea.setText("");
 				queryJSON(m_searchText.getText());
 			}
 		});
@@ -122,7 +118,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 		Container container = getContentPane();
 		container.setPreferredSize(d);
 		pack();
-//		setResizable(false);
 		setVisible(true);
 
 		String hostname = null;
@@ -153,41 +148,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 		setIconImage( img );
 	}
 
-	/**
-	 * 
-	 * @param nodeStr
-	 * @return
-	 */
-	/*public DefaultMutableTreeNode searchNode(String nodeStr) {
-		DefaultMutableTreeNode node = null;
-
-		int selectedIndex = tabbedPaneController.jTabbedPane.getSelectedIndex();
-
-		String fileName = tabbedPaneController.jTabbedPane.getToolTipTextAt(selectedIndex);
-		String json = null;
-		try {
-			json = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-
-		System.out.println(JsonPath.read(json, nodeStr));
-
-		
-		 * JScrollPane fileScrollPane =
-		 * (JScrollPane)tabbedPaneController.jTabbedPane.getSelectedComponent();
-		 * m_tree = (JTree)fileScrollPane.getViewport().getView(); m_model =
-		 * (DefaultTreeModel)m_tree.getModel(); root_defaultMutableTreeNode =
-		 * (DefaultMutableTreeNode)m_model.getRoot();
-		 * 
-		 * Enumeration e =
-		 * root_defaultMutableTreeNode.breadthFirstEnumeration(); while
-		 * (e.hasMoreElements()) { node = (DefaultMutableTreeNode)
-		 * e.nextElement(); if (nodeStr.equals(node.getUserObject().toString()))
-		 * { return node; } }
-		 
-		return null;
-	}*/
 	/**
 	 * Query JSON String
 	 * @param nodeStr
