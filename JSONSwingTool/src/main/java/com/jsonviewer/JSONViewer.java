@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,15 +42,14 @@ public class JSONViewer extends JFrame implements ActionListener{
 	DefaultMutableTreeNode root_defaultMutableTreeNode;
 	private DefaultTreeModel m_model;
 	private PrintStream standardOut;
-
 	JTree m_tree;
+	JButton clearTabs;
+	private JTextField m_searchText;
+	private JButton queryButton;
 
-	JButton clear;
 	public JSONViewer() {
 		init();
 	}
-	private JTextField m_searchText;
-	private JButton queryButton = new JButton("Query");
 	public void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -61,22 +62,42 @@ public class JSONViewer extends JFrame implements ActionListener{
 		JPanel jPanelLower = new JPanel(new BorderLayout());
 		jPanelLower.setSize(new Dimension(200, 200));
 
-		JPanel searchPanel = new JPanel();
+		JPanel searchPanel = new JPanel(new BorderLayout());
 		searchPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		clear = new JButton("Clear Tabs");
-		clear.addActionListener(this);
-		JPanel buttonPanel = new JPanel(new BorderLayout());
-		buttonPanel.add(clear, BorderLayout.LINE_END);
+		clearTabs = new JButton("Clear Tabs");
+		clearTabs.addActionListener(this);
 
 		m_searchText = new JTextField(70);
-		Font font = new Font("Verdana", Font.PLAIN, 12);
+		Font font = new Font("Courier", Font.PLAIN, 15);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
+		m_searchText.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(e);
+			}
+		});
 		
-		searchPanel.add(buttonPanel);
-		searchPanel.add(m_searchText);
-		searchPanel.add(queryButton);
+		m_searchText.addKeyListener(new KeyListener(){
+
+			public void keyTyped(KeyEvent e) {
+				System.out.println("keyTyped "+e);
+				m_searchText.setForeground(Color.RED);
+			}
+
+			public void keyPressed(KeyEvent e) {
+				System.out.println(" keyPressed "+e);
+			}
+
+			public void keyReleased(KeyEvent e) {
+				System.out.println("keyReleased "+e);
+			}
+		});
+		queryButton = new JButton("Query");
+		 
+		searchPanel.add(clearTabs , BorderLayout.WEST);
+		searchPanel.add(m_searchText,BorderLayout.CENTER);
+		searchPanel.add(queryButton,BorderLayout.EAST);
 
 		final JTextArea consoleTextArea = new JTextArea();
 		consoleTextArea.setEditable(false);
@@ -127,11 +148,11 @@ public class JSONViewer extends JFrame implements ActionListener{
 		splitPane.setDividerLocation(500);
 		add(splitPane);
 
-		Dimension d = new Dimension(950, 900);
+		Dimension d = new Dimension(950, 800);
 		Container container = getContentPane();
 		container.setPreferredSize(d);
 		pack();
-		setResizable(false);
+//		setResizable(false);
 		setVisible(true);
 
 		String hostname = null;
@@ -209,17 +230,17 @@ public class JSONViewer extends JFrame implements ActionListener{
 		}
 		String []queryString = nodeStr.split(",");
 		
-		long start_time = System.currentTimeMillis();
+//		long start_time = System.currentTimeMillis();
 		
 		for(String query : queryString) {
 			System.out.println(JsonPath.read(json, query));	
 		}
-		long end_time = System.currentTimeMillis();
+//		long end_time = System.currentTimeMillis();
 //		System.out.println("Total Time = " + (end_time-start_time));
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == clear) {
+		if (e.getSource() == clearTabs) {
 			tabbedPaneController.clearAll();
 		}
 	}
