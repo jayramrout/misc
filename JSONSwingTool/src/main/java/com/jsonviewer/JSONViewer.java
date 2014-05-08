@@ -79,7 +79,8 @@ public class JSONViewer extends JFrame implements ActionListener{
 		searchPanel.add(queryButton,BorderLayout.EAST);
 
 		final JTextArea consoleTextArea = new JTextArea();
-		consoleTextArea.setBackground(Color.LIGHT_GRAY);
+//		consoleTextArea.setBackground(Color.ORANGE);
+		consoleTextArea.setForeground(Color.RED);
 //		consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
