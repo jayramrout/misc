@@ -63,7 +63,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 		jPanelLower.setSize(new Dimension(200, 200));
 
 		JPanel searchPanel = new JPanel(new BorderLayout());
-		searchPanel.setBorder(BorderFactory.createEtchedBorder());
+//		searchPanel.setBorder(BorderFactory.createEtchedBorder());
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
@@ -80,6 +80,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 		searchPanel.add(queryButton,BorderLayout.EAST);
 
 		final JTextArea consoleTextArea = new JTextArea();
+		consoleTextArea.setBackground(Color.LIGHT_GRAY);
 //		consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
