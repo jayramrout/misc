@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -212,7 +213,17 @@ public class JSONViewer extends JFrame implements ActionListener{
 //		long start_time = System.currentTimeMillis();
 		
 		for(String query : queryString) {
-			System.out.println(JsonPath.read(json, query));	
+			System.out.println("=== "+query+" ====");
+			Object object = JsonPath.read(json, query);
+			if(object instanceof List){
+				List<Object> objList = (List<Object>)object;
+				for(Object obj : objList){
+					System.out.println(obj);
+				}
+			}else{
+				System.out.println(object);
+			}
+//			System.out.println(JsonPath.read(json, query));	
 		}
 //		long end_time = System.currentTimeMillis();
 //		System.out.println("Total Time = " + (end_time-start_time));
