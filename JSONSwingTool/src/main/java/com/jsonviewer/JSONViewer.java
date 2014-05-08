@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -17,6 +17,7 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -153,6 +154,14 @@ public class JSONViewer extends JFrame implements ActionListener{
 
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		Image img = null;
+		try {
+			img = ImageIO.read(getClass().getResource("/json.png"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		setIconImage( img );
 	}
 
 	/**
