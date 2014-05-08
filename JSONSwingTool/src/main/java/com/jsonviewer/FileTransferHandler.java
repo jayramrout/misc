@@ -31,11 +31,15 @@ class FileTransferHandler extends TransferHandler {
 		}
 		try {
 			if (hasFileFlavor(t.getTransferDataFlavors())) {
+				//System.out.println(Helper.fileList);
 				String str = null;
 				java.util.List files = (java.util.List) t.getTransferData(fileFlavor);
 				for (int i = 0; i < files.size(); i++) {
 					File file = (File) files.get(i);
-					if (file.getName().toLowerCase().endsWith("json") && Helper.isJSONValid(file)) {
+					if(Helper.fileList.contains(file.getAbsolutePath())){
+						JOptionPane.showMessageDialog(null, "File Already Present", "Error", JOptionPane.ERROR_MESSAGE);
+					}else if (file.getName().toLowerCase().endsWith("json") && Helper.isJSONValid(file)) {
+						Helper.fileList.add(file.getAbsolutePath());
 						tpc.addTab(file.toString());
 					}
 				}

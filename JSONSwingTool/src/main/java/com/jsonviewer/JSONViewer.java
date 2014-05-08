@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -38,7 +37,7 @@ import com.jayway.jsonpath.JsonPath;
  *
  */
 public class JSONViewer extends JFrame implements ActionListener{
-
+	
 	TabbedPaneController tabbedPaneController;
 	DefaultMutableTreeNode root_defaultMutableTreeNode;
 	private DefaultTreeModel m_model;

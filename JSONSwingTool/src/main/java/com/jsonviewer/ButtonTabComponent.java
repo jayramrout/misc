@@ -77,6 +77,8 @@ public class ButtonTabComponent extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(ButtonTabComponent.this);
             if (i != -1) {
+            	String fileName = paneController.jTabbedPane.getToolTipTextAt(i);
+            	Helper.fileList.remove(fileName);
                 pane.remove(i);
             }
             if(pane.getTabCount() == 0) {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
@@ -24,7 +25,9 @@ import org.json.JSONObject;
  *
  */
 public class Helper {
-
+	
+	static List fileList = new ArrayList();
+	
 	public static String getInputStreamContents(InputStream is) throws IOException {
 		String retval = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
