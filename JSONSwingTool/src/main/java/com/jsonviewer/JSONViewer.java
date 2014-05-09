@@ -48,6 +48,7 @@ public class JSONViewer extends JFrame implements ActionListener{
 
 	public JSONViewer() {
 		init();
+		setIcon();
 	}
 	public void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -139,7 +140,11 @@ public class JSONViewer extends JFrame implements ActionListener{
 
 		setLocationRelativeTo(null);
 		setVisible(true);
-		
+	}
+	/**
+	 * 
+	 */
+	private void setIcon(){
 		Image img = null;
 		try {
 			img = ImageIO.read(getClass().getResource("/json.png"));
@@ -148,7 +153,6 @@ public class JSONViewer extends JFrame implements ActionListener{
 		}
 		setIconImage( img );
 	}
-
 	/**
 	 * Query JSON String
 	 * @param nodeStr
@@ -160,8 +164,13 @@ public class JSONViewer extends JFrame implements ActionListener{
 		Scanner scanner = null;
 		File file = null;
 		try {
-			file = new File(fileName);
-			scanner = new Scanner(file).useDelimiter("\\Z");
+			if(fileName == JSONConstants.DEFAULT){
+				file = new File("Default");
+				scanner = new Scanner(getClass().getResourceAsStream("/StoreJSON.txt")).useDelimiter("\\Z");
+			}else{
+				file = new File(fileName);
+				scanner = new Scanner(file).useDelimiter("\\Z");
+			}
 			json = scanner.next();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();

@@ -18,10 +18,10 @@ import javax.swing.JTree;
 class TabbedPaneController {
 	JPanel jPanelMain = null;
 	JTabbedPane jTabbedPane;
-	JPanel emptyFilePanel = null;
+	JPanel defaultTreePanel = null;
 	FileTransferHandler fileTransferHandler;
 
-	boolean noFiles = true;
+	boolean noTabs = true;
 
 	String fileSeparator;
 
@@ -51,10 +51,10 @@ class TabbedPaneController {
 	 * @return
 	 */
 	public void addTab(String filename) {
-		if (noFiles) {
-			jPanelMain.remove(emptyFilePanel);
+		if (noTabs) {
+			//jPanelMain.remove(defaultTreePanel);
 			jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
-			noFiles = false;
+			noTabs = false;
 		}
 		String[] str = filename.split(fileSeparator);
 		makeJTreePane(str[str.length - 1], filename);
@@ -65,26 +65,33 @@ class TabbedPaneController {
 	 * back.
 	 */
 	public void clearAll() {
-		if (noFiles == false) {
+		if (noTabs == false) {
 			jTabbedPane.removeAll();
 			jPanelMain.remove(jTabbedPane);
+			initializeTab = true;
+			Helper.fileList.clear();
 		}
 		init();
 	}
-
+	boolean initializeTab = true;
 	private void init() {
-		noFiles = true;
-		if (emptyFilePanel == null) {
+		noTabs = true;
+		if (initializeTab) {
+			initializeTab = false;
 			TreeView tv = new TreeView();
 			JTree treePane = tv.getTreeView(getClass().getResourceAsStream("/StoreJSON.txt"));
 			
 			treePane.setTransferHandler(fileTransferHandler);
 			JScrollPane fileScrollPane = new JScrollPane(treePane);
-			emptyFilePanel = new JPanel(new BorderLayout(), false);
-			emptyFilePanel.add(fileScrollPane, BorderLayout.CENTER);
+			
+			jTabbedPane.addTab("Store", null, (Component) fileScrollPane, JSONConstants.DEFAULT);
+			jTabbedPane.setSelectedComponent((Component) fileScrollPane);
+//			defaultTreePanel = new JPanel(new BorderLayout(), false);
+//			defaultTreePanel.add(fileScrollPane, BorderLayout.CENTER);
+			jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
+			jPanelMain.repaint();
 		}
-		jPanelMain.add(emptyFilePanel, BorderLayout.CENTER);
-		jPanelMain.repaint();
+		
 	}
 
 	/**
