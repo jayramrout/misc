@@ -1,14 +1,19 @@
 package com.jsonviewer;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 
 /**
@@ -82,6 +87,39 @@ class TabbedPaneController {
 			JTree treePane = tv.getTreeView(getClass().getResourceAsStream("/StoreJSON.txt"));
 			
 			treePane.setTransferHandler(fileTransferHandler);
+			JScrollPane treeScrollPane = new JScrollPane(treePane);
+
+			final JTextArea instructionTextArea = new JTextArea();
+			instructionTextArea.setForeground(Color.blue);
+			try {
+				instructionTextArea.read(new InputStreamReader(
+	                    getClass().getResourceAsStream("/ReadMe.txt")),null);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+			JScrollPane consoleScrollPane = new JScrollPane(instructionTextArea);
+			
+			JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, consoleScrollPane);
+			lowerSplitPane.setDividerLocation(600);
+			
+			jTabbedPane.addTab("Store", null, (Component) lowerSplitPane, JSONConstants.DEFAULT);
+			jTabbedPane.setSelectedComponent((Component) lowerSplitPane);
+			jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
+			jPanelMain.repaint();
+		}
+	}
+	
+	/**
+	 * This init was without split
+	 */
+	/*private void init() {
+		noTabs = true;
+		if (initializeTab) {
+			initializeTab = false;
+			TreeView tv = new TreeView();
+			JTree treePane = tv.getTreeView(getClass().getResourceAsStream("/StoreJSON.txt"));
+			
+			treePane.setTransferHandler(fileTransferHandler);
 			JScrollPane fileScrollPane = new JScrollPane(treePane);
 			
 			jTabbedPane.addTab("Store", null, (Component) fileScrollPane, JSONConstants.DEFAULT);
@@ -92,7 +130,7 @@ class TabbedPaneController {
 			jPanelMain.repaint();
 		}
 		
-	}
+	}*/
 
 	/**
 	 * @param name

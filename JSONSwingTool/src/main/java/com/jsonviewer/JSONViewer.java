@@ -94,12 +94,12 @@ public class JSONViewer extends JFrame implements ActionListener{
 		outputPanel.setLayout(new BorderLayout());
 		outputPanel.add(consoleScrollPane, BorderLayout.CENTER);
 		
-		try {
+		/*try {
 			consoleTextArea.read(new InputStreamReader(
                     getClass().getResourceAsStream("/ReadMe.txt")),null);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 		
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
