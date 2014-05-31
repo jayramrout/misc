@@ -9,3 +9,5 @@ filtering.jar
 java-json.jar
 jsyntaxpane-0.9.5-b29.jar
 poi-3.7.jar
+
+Jar files have been renamed to .txt... rename back to .jar and put that in the classpath.
