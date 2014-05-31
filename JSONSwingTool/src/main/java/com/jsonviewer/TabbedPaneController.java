@@ -18,6 +18,7 @@ import javax.swing.JTree;
 
 /**
  * @author Jayram Rout
+ * Changes Done
  *
  */
 class TabbedPaneController {
@@ -91,6 +92,7 @@ class TabbedPaneController {
 
 			final JTextArea instructionTextArea = new JTextArea();
 			instructionTextArea.setForeground(Color.blue);
+			instructionTextArea.setEditable(Boolean.FALSE);
 			try {
 				instructionTextArea.read(new InputStreamReader(
 	                    getClass().getResourceAsStream("/ReadMe.txt")),null);
@@ -100,7 +102,7 @@ class TabbedPaneController {
 			JScrollPane consoleScrollPane = new JScrollPane(instructionTextArea);
 			
 			JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, consoleScrollPane);
-			lowerSplitPane.setDividerLocation(600);
+			lowerSplitPane.setDividerLocation(800);
 			
 			jTabbedPane.addTab("Store", null, (Component) lowerSplitPane, JSONConstants.DEFAULT);
 			jTabbedPane.setSelectedComponent((Component) lowerSplitPane);
