@@ -20,8 +20,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -30,7 +31,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -50,9 +50,11 @@ public class JSONViewer extends JFrame implements ActionListener {
 	private DefaultTreeModel m_model;
 	JTree m_tree;
 	JButton clearTabs;
-	private JTextField m_searchText;
+//	private JTextField m_searchText;
+	JComboBox m_searchText;
 	private JButton queryButton;
-
+	String[] patternExamples = {"currentBudgetData.agElMisc.agReason","store"};
+	
 	public JSONViewer() {
 		init();
 		setIcon();
@@ -74,8 +76,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
-
-		m_searchText = new JTextField(70);
+		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(new String[] {"currentBudgetData.agElMisc.agReason"});
+		m_searchText = new JComboBox(model);
+		m_searchText.setEditable(true);
+//		m_searchText.addActionListener(this);
+        
+//		m_searchText = new JTextField(70);
 		Font font = new Font("Courier", Font.PLAIN, 13);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
@@ -99,9 +105,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 			}
 		});
 		
-		// consoleTextArea.setBackground(Color.ORANGE);
 		consoleTextArea.setForeground(Color.RED);
-		// consoleTextArea.setEditable(false);
+		//consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
@@ -113,15 +118,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 		outputPanel.setLayout(new BorderLayout());
 		outputPanel.add(consoleScrollPane, BorderLayout.CENTER);
 
-		/*
-		 * try { consoleTextArea.read(new InputStreamReader(
-		 * getClass().getResourceAsStream("/ReadMe.txt")),null); } catch
-		 * (IOException e) { e.printStackTrace(); }
-		 */
-
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				queryJSON(m_searchText.getText());
+				if(model.getIndexOf(m_searchText.getSelectedItem().toString().trim()) == -1 ) {
+				    model.addElement(m_searchText.getSelectedItem().toString().trim());
+				}
+				queryJSON(m_searchText.getSelectedItem().toString());
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);
