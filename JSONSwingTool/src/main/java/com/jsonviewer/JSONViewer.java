@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -43,18 +44,18 @@ import com.jayway.jsonpath.PathNotFoundException;
  *
  */
 public class JSONViewer extends JFrame implements ActionListener {
-//	private static final Logger log = Logger.getLogger(JSONViewer.class);
+	// private static final Logger log = Logger.getLogger(JSONViewer.class);
 
 	TabbedPaneController tabbedPaneController;
 	DefaultMutableTreeNode root_defaultMutableTreeNode;
 	private DefaultTreeModel m_model;
 	JTree m_tree;
 	JButton clearTabs;
-//	private JTextField m_searchText;
+	// private JTextField m_searchText;
 	JComboBox m_searchText;
 	private JButton queryButton;
-	String[] patternExamples = {"currentBudgetData.agElMisc.agReason","store"};
-	
+	String[] patternExamples = {"currentBudgetData.agElMisc.agReason", "store"};
+
 	public JSONViewer() {
 		init();
 		setIcon();
@@ -76,12 +77,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
-		final DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(new String[] {"currentBudgetData.agElMisc.agReason"});
+		final SortedComboBoxModel model = new SortedComboBoxModel(new String[]{"currentBudgetData.agElMisc.agReason"});
 		m_searchText = new JComboBox(model);
 		m_searchText.setEditable(true);
-//		m_searchText.addActionListener(this);
-        
-//		m_searchText = new JTextField(70);
+		// m_searchText.addActionListener(this);
+
+		// m_searchText = new JTextField(70);
 		Font font = new Font("Courier", Font.PLAIN, 13);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
@@ -95,18 +96,18 @@ public class JSONViewer extends JFrame implements ActionListener {
 		final JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem clearItem = new JMenuItem("Clear Text");
 		popupMenu.add(clearItem);
-		
+
 		final JTextArea consoleTextArea = new JTextArea();
-		
+
 		consoleTextArea.setComponentPopupMenu(popupMenu);
-		clearItem.addActionListener(new ActionListener(){
+		clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.setText("");
 			}
 		});
-		
+
 		consoleTextArea.setForeground(Color.RED);
-		//consoleTextArea.setEditable(false);
+		// consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
@@ -120,8 +121,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(model.getIndexOf(m_searchText.getSelectedItem().toString().trim()) == -1 ) {
-				    model.addElement(m_searchText.getSelectedItem().toString().trim());
+				if (model.getIndexOf(m_searchText.getSelectedItem().toString().trim()) == -1) {
+					model.addElement(m_searchText.getSelectedItem().toString().trim());
 				}
 				queryJSON(m_searchText.getSelectedItem().toString());
 			}
@@ -255,7 +256,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		Object obj = null;
 		try {
-//			log.debug(json);
+			// log.debug(json);
 			obj = JsonPath.read(json, query);
 		} catch (PathNotFoundException pnfe) {
 			System.err.println("\t\tPath Not Found : " + query);
