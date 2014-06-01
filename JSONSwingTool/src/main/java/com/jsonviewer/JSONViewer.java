@@ -46,13 +46,11 @@ import com.jayway.jsonpath.PathNotFoundException;
 public class JSONViewer extends JFrame implements ActionListener {
 	// private static final Logger log = Logger.getLogger(JSONViewer.class);
 
-	TabbedPaneController tabbedPaneController;
-	DefaultMutableTreeNode root_defaultMutableTreeNode;
-	private DefaultTreeModel m_model;
-	JTree m_tree;
-	JButton clearTabs;
-	// private JTextField m_searchText;
-	JComboBox m_searchText;
+	private TabbedPaneController tabbedPaneController;
+	private DefaultMutableTreeNode root_defaultMutableTreeNode;
+	private JTree m_tree;
+	private JButton clearTabs;
+	private JComboBox m_searchText;
 	private JButton queryButton;
 	String[] patternExamples = {"currentBudgetData.agElMisc.agReason", "store"};
 
@@ -80,9 +78,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		final SortedComboBoxModel model = new SortedComboBoxModel(new String[]{"currentBudgetData.agElMisc.agReason"});
 		m_searchText = new JComboBox(model);
 		m_searchText.setEditable(true);
-		// m_searchText.addActionListener(this);
 
-		// m_searchText = new JTextField(70);
 		Font font = new Font("Courier", Font.PLAIN, 13);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
