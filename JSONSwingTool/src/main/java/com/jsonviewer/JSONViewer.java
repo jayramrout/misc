@@ -117,10 +117,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (model.getIndexOf(m_searchText.getSelectedItem().toString().trim()) == -1) {
-					model.addElement(m_searchText.getSelectedItem().toString().trim());
+				final String queryString = m_searchText.getSelectedItem().toString().replaceAll("\\s",""); 
+				
+				if (model.getIndexOf(queryString) == -1) {
+					model.addElement(queryString);
 				}
-				queryJSON(m_searchText.getSelectedItem().toString());
+				queryJSON(queryString);
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);
