@@ -91,14 +91,32 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		final JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem clearItem = new JMenuItem("Clear Text");
+		JMenuItem copyItem = new JMenuItem("Copy");
+		JMenuItem cutItem = new JMenuItem("Cut");
+		
 		popupMenu.add(clearItem);
-
+		popupMenu.add(copyItem);
+		popupMenu.add(cutItem);
 		final JTextArea consoleTextArea = new JTextArea();
-
+		
+//		m_searchText.setComponentPopupMenu(popupMenu);
 		consoleTextArea.setComponentPopupMenu(popupMenu);
+		
 		clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.setText("");
+			}
+		});
+		
+		copyItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				consoleTextArea.copy();
+			}
+		});
+		
+		cutItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				consoleTextArea.cut();
 			}
 		});
 
