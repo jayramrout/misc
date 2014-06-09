@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,10 +20,10 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -32,9 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -52,12 +54,14 @@ public class JSONViewer extends JFrame implements ActionListener {
 	private JButton clearTabs;
 	private JComboBox m_searchText;
 	private JButton queryButton;
-	String[] patternExamples = {"currentBudgetData.agElMisc.agReason", "store"};
+	String[] patternExamples = { "currentBudgetData.agElMisc.agReason", "store" };
+	Set<String> treeSet = new TreeSet<String>();
 
 	public JSONViewer() {
 		init();
 		setIcon();
 	}
+
 	public void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -75,10 +79,45 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
-		final SortedComboBoxModel model = new SortedComboBoxModel(new String[]{"currentBudgetData.agElMisc.agReason"});
-		m_searchText = new JComboBox(model);
-		m_searchText.setEditable(true);
+		// final SortedComboBoxModel model = new SortedComboBoxModel(new
+		// String[]{"currentBudgetData.agElMisc.agReason"});
+		// m_searchText = new JComboBox(model);
+		m_searchText = new JComboBox();
 
+		m_searchText.setEditable(true);
+		m_searchText.getEditor().getEditorComponent()
+				.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						if (e.getKeyCode() != 38 && e.getKeyCode() != 40
+								&& e.getKeyCode() != 10 && e.getKeyCode() != 36
+								&& e.getKeyCode() != 16 && e.getKeyCode() != 17
+								&& e.getKeyCode() != 37 && e.getKeyCode() != 39
+								&& e.getKeyCode() != 35) {
+							String a = m_searchText.getEditor().getItem().toString();
+							m_searchText.removeAllItems();
+
+							int counter = 0;
+							m_searchText.addItem("");
+							for (String keys : treeSet) {
+								if (keys.toLowerCase()
+										.contains(a.toLowerCase())) {
+									m_searchText.addItem(keys);
+									counter++;
+								}
+							}
+							m_searchText.getEditor().setItem(new String(a));
+							JTextField textField = (JTextField)e.getSource();
+							textField.setCaretPosition( textField.getDocument().getLength() );
+							
+							m_searchText.hidePopup();
+							if (counter != 0) {
+								m_searchText.showPopup();
+							}
+						}
+
+					}
+				});
 		Font font = new Font("Courier", Font.PLAIN, 13);
 		m_searchText.setFont(font);
 		m_searchText.setForeground(Color.BLUE);
@@ -93,27 +132,27 @@ public class JSONViewer extends JFrame implements ActionListener {
 		JMenuItem clearItem = new JMenuItem("Clear Text");
 		JMenuItem copyItem = new JMenuItem("Copy");
 		JMenuItem cutItem = new JMenuItem("Cut");
-		
+
 		popupMenu.add(clearItem);
 		popupMenu.add(copyItem);
 		popupMenu.add(cutItem);
 		final JTextArea consoleTextArea = new JTextArea();
-		
-//		m_searchText.setComponentPopupMenu(popupMenu);
+
+		// m_searchText.setComponentPopupMenu(popupMenu);
 		consoleTextArea.setComponentPopupMenu(popupMenu);
-		
+
 		clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.setText("");
 			}
 		});
-		
+
 		copyItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.copy();
 			}
 		});
-		
+
 		cutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.cut();
@@ -124,7 +163,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 		// consoleTextArea.setEditable(false);
 		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
 
-		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
+		PrintStream printStream = new PrintStream(new CustomOutputStream(
+				consoleTextArea));
 
 		System.setOut(printStream);
 		System.setErr(printStream);
@@ -135,20 +175,27 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final String queryString = m_searchText.getSelectedItem().toString().replaceAll("\\s",""); 
-				
-				if (model.getIndexOf(queryString) == -1) {
-					model.addElement(queryString);
+				final String queryString = m_searchText.getSelectedItem()
+						.toString().replaceAll("\\s", "");
+
+				/*
+				 * if (model.getIndexOf(queryString) == -1) {
+				 * model.addElement(queryString); }
+				 */
+				if (!treeSet.contains(queryString)) {
+					treeSet.add(queryString);
 				}
 				queryJSON(queryString);
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);
-		JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, searchPanel, outputPanel);
+		JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				searchPanel, outputPanel);
 		lowerSplitPane.setDividerSize(0);
 		jPanelLower.add(lowerSplitPane);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelMain, jPanelLower);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				jPanelMain, jPanelLower);
 		splitPane.setDividerSize(2);
 		splitPane.setDividerLocation(500);
 		add(splitPane);
@@ -178,6 +225,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
+
 	/**
 	 * 
 	 */
@@ -190,6 +238,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		}
 		setIconImage(img);
 	}
+
 	/**
 	 * Query JSON String
 	 * 
@@ -197,7 +246,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 	 */
 	private void queryJSON(String nodeStr) {
 		int selectedIndex = tabbedPaneController.jTabbedPane.getSelectedIndex();
-		String fileName = tabbedPaneController.jTabbedPane.getToolTipTextAt(selectedIndex);
+		String fileName = tabbedPaneController.jTabbedPane
+				.getToolTipTextAt(selectedIndex);
 		StringBuilder jsonBuilder = new StringBuilder();
 
 		Scanner scanner = null;
@@ -207,7 +257,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 		try {
 			if (fileName == JSONConstants.DEFAULT) {
 				file = new File(fileName);
-				br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/StoreJSON.txt")));
+				br = new BufferedReader(new InputStreamReader(getClass()
+						.getResourceAsStream("/StoreJSON.txt")));
 			} else {
 				file = new File(fileName);
 				in = new FileReader(file);
@@ -262,6 +313,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 			}
 		}
 	}
+
 	/**
 	 * 
 	 * @param json
@@ -281,6 +333,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		}
 		return obj;
 	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == clearTabs) {
 			tabbedPaneController.clearAll();
