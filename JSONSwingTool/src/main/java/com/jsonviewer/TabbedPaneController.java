@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.TreeSet;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,6 +16,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import com.jsonviewer.path.JSONPathCreator;
 
 /**
  * @author Jayram Rout
@@ -35,7 +40,7 @@ class TabbedPaneController {
 	 * @param jTabbedPane
 	 * @param jPanelMain
 	 */
-	public TabbedPaneController(JTabbedPane jTabbedPane, JPanel jPanelMain) {
+	public TabbedPaneController(final JTabbedPane jTabbedPane, JPanel jPanelMain) {
 		this.jTabbedPane = jTabbedPane;
 		this.jPanelMain = jPanelMain;
 		fileTransferHandler = new FileTransferHandler(this);
@@ -49,6 +54,15 @@ class TabbedPaneController {
 		if ("\\".equals(fileSeparator)) {
 			fileSeparator = "\\\\";
 		}
+		jTabbedPane.addChangeListener(new ChangeListener() {
+		    public void stateChanged(ChangeEvent e) {
+		    	String fileName =  jTabbedPane
+						.getToolTipTextAt(jTabbedPane.getSelectedIndex());
+		    	String jsonContent = new Helper().getJSONString(fileName);
+		    	JSONViewer.treeSet = new TreeSet();
+		    	JSONPathCreator.getJSONKeys(jsonContent);
+		    }
+		});
 		init();
 	}
 
@@ -158,5 +172,6 @@ class TabbedPaneController {
 	
 	private void initTabComponent() {
 		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(), new ButtonTabComponent(this));
+		
 	}
 }

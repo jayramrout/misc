@@ -3,6 +3,8 @@ package com.jsonviewer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -177,4 +180,53 @@ public class Helper {
 			return false;
 		}
 	}
+	/**
+	 * 
+	 * @param tabbedPaneController
+	 * @return
+	 */
+	public String getJSONString(String fileName){
+		StringBuilder jsonBuilder = new StringBuilder();
+
+		Scanner scanner = null;
+		File file = null;
+		FileReader in = null;
+		BufferedReader br = null;
+		try {
+			if (fileName == JSONConstants.DEFAULT) {
+				file = new File(fileName);
+				br = new BufferedReader(new InputStreamReader(getClass()
+						.getResourceAsStream("/StoreJSON.txt")));
+			} else {
+				file = new File(fileName);
+				in = new FileReader(file);
+				br = new BufferedReader(in);
+			}
+			try {
+				String line;
+				while ((line = br.readLine()) != null) {
+					jsonBuilder.append(line);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} finally {
+			try {
+				if (scanner != null)
+					scanner.close();
+
+				if (in != null) {
+					in.close();
+				}
+				if (br != null) {
+					br.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return jsonBuilder.toString();
+	} 
 }

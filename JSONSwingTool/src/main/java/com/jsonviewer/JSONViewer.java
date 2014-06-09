@@ -34,9 +34,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.text.JTextComponent;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -49,13 +47,10 @@ public class JSONViewer extends JFrame implements ActionListener {
 	// private static final Logger log = Logger.getLogger(JSONViewer.class);
 
 	private TabbedPaneController tabbedPaneController;
-	private DefaultMutableTreeNode root_defaultMutableTreeNode;
-	private JTree m_tree;
 	private JButton clearTabs;
-	private JComboBox m_searchText;
+	private JComboBox jComboBoxQuery;
 	private JButton queryButton;
-	String[] patternExamples = { "currentBudgetData.agElMisc.agReason", "store" };
-	Set<String> treeSet = new TreeSet<String>();
+	public static Set<String> treeSet = new TreeSet<String>();
 
 	public JSONViewer() {
 		init();
@@ -79,13 +74,10 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
-		// final SortedComboBoxModel model = new SortedComboBoxModel(new
-		// String[]{"currentBudgetData.agElMisc.agReason"});
-		// m_searchText = new JComboBox(model);
-		m_searchText = new JComboBox();
+		jComboBoxQuery = new JComboBox();
 
-		m_searchText.setEditable(true);
-		m_searchText.getEditor().getEditorComponent()
+		jComboBoxQuery.setEditable(true);
+		jComboBoxQuery.getEditor().getEditorComponent()
 				.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
@@ -94,38 +86,35 @@ public class JSONViewer extends JFrame implements ActionListener {
 								&& e.getKeyCode() != 16 && e.getKeyCode() != 17
 								&& e.getKeyCode() != 37 && e.getKeyCode() != 39
 								&& e.getKeyCode() != 35) {
-							String a = m_searchText.getEditor().getItem().toString();
-							m_searchText.removeAllItems();
+							String a = jComboBoxQuery.getEditor().getItem().toString();
+							jComboBoxQuery.removeAllItems();
 
 							int counter = 0;
-							m_searchText.addItem("");
+							jComboBoxQuery.addItem("");
 							for (String keys : treeSet) {
-								if (keys.toLowerCase()
-										.contains(a.toLowerCase())) {
-									m_searchText.addItem(keys);
+								if (keys.toLowerCase().contains(a.toLowerCase())) {
+									jComboBoxQuery.addItem(keys);
 									counter++;
 								}
 							}
-							m_searchText.getEditor().setItem(new String(a));
-							JTextField textField = (JTextField)e.getSource();
-							textField.setCaretPosition( textField.getDocument().getLength() );
+							jComboBoxQuery.getEditor().setItem(new String(a));
+							((JTextComponent)e.getSource()).setCaretPosition(a.length());
 							
-							m_searchText.hidePopup();
+							jComboBoxQuery.hidePopup();
 							if (counter != 0) {
-								m_searchText.showPopup();
+								jComboBoxQuery.showPopup();
 							}
 						}
-
 					}
 				});
 		Font font = new Font("Courier", Font.PLAIN, 13);
-		m_searchText.setFont(font);
-		m_searchText.setForeground(Color.BLUE);
+		jComboBoxQuery.setFont(font);
+		jComboBoxQuery.setForeground(Color.BLUE);
 
 		queryButton = new JButton("Query");
 
 		searchPanel.add(clearTabs, BorderLayout.WEST);
-		searchPanel.add(m_searchText, BorderLayout.CENTER);
+		searchPanel.add(jComboBoxQuery, BorderLayout.CENTER);
 		searchPanel.add(queryButton, BorderLayout.EAST);
 
 		final JPopupMenu popupMenu = new JPopupMenu();
@@ -175,7 +164,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final String queryString = m_searchText.getSelectedItem()
+				final String queryString = jComboBoxQuery.getSelectedItem()
 						.toString().replaceAll("\\s", "");
 
 				/*
@@ -248,53 +237,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 		int selectedIndex = tabbedPaneController.jTabbedPane.getSelectedIndex();
 		String fileName = tabbedPaneController.jTabbedPane
 				.getToolTipTextAt(selectedIndex);
-		StringBuilder jsonBuilder = new StringBuilder();
-
-		Scanner scanner = null;
-		File file = null;
-		FileReader in = null;
-		BufferedReader br = null;
-		try {
-			if (fileName == JSONConstants.DEFAULT) {
-				file = new File(fileName);
-				br = new BufferedReader(new InputStreamReader(getClass()
-						.getResourceAsStream("/StoreJSON.txt")));
-			} else {
-				file = new File(fileName);
-				in = new FileReader(file);
-				br = new BufferedReader(in);
-			}
-			try {
-				String line;
-				while ((line = br.readLine()) != null) {
-					jsonBuilder.append(line);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} finally {
-			try {
-				if (scanner != null)
-					scanner.close();
-
-				if (in != null) {
-					in.close();
-				}
-				if (br != null) {
-					br.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		String[] queryString = nodeStr.split(",");
-		System.out.println("== " + file.getName() + " ==");
+		System.out.println("== " + fileName.substring(fileName.lastIndexOf("\\")+1) + " ==");
 		for (String query : queryString) {
 			if (query != null && query.length() > 0) {
 				System.out.println("\t" + query + ":");
-				Object object = readJsonPath(jsonBuilder.toString(), query);// JsonPath.read(json,
+				Object object = readJsonPath(new Helper().getJSONString(fileName), query);// JsonPath.read(json,
 																			// query);
 				if (object != null) {
 					if (object instanceof List) {
