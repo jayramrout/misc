@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.TreeSet;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -59,7 +58,6 @@ class TabbedPaneController {
 		    	String fileName =  jTabbedPane
 						.getToolTipTextAt(jTabbedPane.getSelectedIndex());
 		    	String jsonContent = new Helper().getJSONString(fileName);
-		    	JSONViewer.treeSet = new TreeSet();
 		    	JSONPathCreator.getJSONKeys(jsonContent);
 		    }
 		});
