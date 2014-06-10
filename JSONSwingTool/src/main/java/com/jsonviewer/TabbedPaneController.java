@@ -55,10 +55,12 @@ class TabbedPaneController {
 		}
 		jTabbedPane.addChangeListener(new ChangeListener() {
 		    public void stateChanged(ChangeEvent e) {
-		    	String fileName =  jTabbedPane
-						.getToolTipTextAt(jTabbedPane.getSelectedIndex());
-		    	String jsonContent = new Helper().getJSONString(fileName);
-		    	JSONPathCreator.getJSONKeys(jsonContent);
+		    	int index = jTabbedPane.getSelectedIndex();
+		    	if(index != -1){
+		    		String fileName =  jTabbedPane.getToolTipTextAt(index);
+		    		String jsonContent = new Helper().getJSONString(fileName);
+		    		JSONPathCreator.getJSONKeys(jsonContent);
+		    	}
 		    }
 		});
 		init();
