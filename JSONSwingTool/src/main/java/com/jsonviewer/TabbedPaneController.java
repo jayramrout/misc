@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,6 +18,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.jsonviewer.path.JSONPathCreator;
 
@@ -121,6 +126,8 @@ class TabbedPaneController {
 			jTabbedPane.addTab("Store", null, (Component) lowerSplitPane, JSONConstants.DEFAULT);
 			jTabbedPane.setSelectedComponent((Component) lowerSplitPane);
 			jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
+			
+			
 			jPanelMain.repaint();
 		}
 	}
@@ -164,8 +171,26 @@ class TabbedPaneController {
 		treePane.setTransferHandler(fileTransferHandler);
 
 		JScrollPane fileScrollPane = new JScrollPane(treePane);
-		jTabbedPane.addTab(name, null, (Component) fileScrollPane, fileName);
-		jTabbedPane.setSelectedComponent((Component) fileScrollPane);
+		
+		
+		final JTextArea jsonTextArea = new JTextArea();
+		jsonTextArea.setForeground(Color.blue);
+		jsonTextArea.setEditable(Boolean.FALSE);
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Object json = mapper.readValue(new Helper().getJSONString(fileName), Object.class);
+			jsonTextArea.read(new StringReader(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)),null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		JScrollPane consoleScrollPane = new JScrollPane(jsonTextArea);
+		JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fileScrollPane, consoleScrollPane);
+		lowerSplitPane.setDividerLocation(600);
+		
+		jTabbedPane.addTab(name, null, (Component) lowerSplitPane, fileName);
+		jTabbedPane.setSelectedComponent((Component) lowerSplitPane);
+		jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
 		
 		initTabComponent();
 	}
