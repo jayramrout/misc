@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
+import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -61,12 +62,14 @@ class TabbedPaneController {
 			public void stateChanged(ChangeEvent e) {
 				int index = jTabbedPane.getSelectedIndex();
 				if (index != -1) {
-					/*JSplitPane jSplitPane = (JSplitPane)jTabbedPane.getComponentAt(index);
-					System.out.println(jSplitPane.getComponentCount());
-					jSplitPane.getComponent(1);*/
-					String fileName = jTabbedPane.getToolTipTextAt(index);
-					String jsonContent = new Helper().getJSONString(fileName);
-					JSONPathCreator.getJSONKeys(jsonContent);
+					JSplitPane jSplitPane = (JSplitPane)jTabbedPane.getComponentAt(index);
+					RTextScrollPane textScrollPane = (RTextScrollPane)jSplitPane.getComponent(1);
+					JViewport viewPort = (JViewport)textScrollPane.getComponent(0);
+					RSyntaxTextArea textArea = (RSyntaxTextArea)viewPort.getComponent(0);
+//					String fileName = jTabbedPane.getToolTipTextAt(index);
+//					String jsonContent = new Helper().getJSONString(textArea.getText());
+//					JSONPathCreator.getJSONKeys(jsonContent);
+					JSONPathCreator.getJSONKeys(textArea.getText());
 				}
 			}
 		});
@@ -142,6 +145,7 @@ class TabbedPaneController {
 		jsonTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		jsonTextArea.setCodeFoldingEnabled(true);
 		jsonTextArea.setEditable(false);
+		
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -155,7 +159,7 @@ class TabbedPaneController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		JSplitPane upperSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, jsonTextScrollPane);
 		upperSplitPane.setDividerLocation(600);
 

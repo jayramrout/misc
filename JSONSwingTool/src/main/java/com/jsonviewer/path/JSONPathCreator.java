@@ -22,7 +22,7 @@ import com.jsonviewer.JSONViewer;
  */
 public class JSONPathCreator {
 	
-	public static void main(String[] args) throws Exception {
+	/*public static void main(String[] args) throws Exception {
 		JSONPathCreator main = new JSONPathCreator();
 		main.startReading();
 	}
@@ -31,7 +31,7 @@ public class JSONPathCreator {
 //		String jsonContents = JSONPathCreator.getInputStreamContents(getClass().getResourceAsStream("/StoreJSON.txt"));
 		String jsonContents = JSONPathCreator.getInputStreamContents(getClass().getResourceAsStream("/ReadMe2.json"));
 		Set keys = getJSONKeys(jsonContents);
-	}
+	}*/
 	
 	public static Set getJSONKeys(String jsonContent) {
 		JSONObject object = null;
@@ -107,7 +107,7 @@ public class JSONPathCreator {
 			} else if (val instanceof JSONArray) {
 				getListFromJSONArray(jsonPathKey+"["+i+"]", (JSONArray) val);
 			} else {
-				System.out.println(" From JSON Aray : "+jsonPathKey);
+				JSONViewer.treeSet.add(jsonPathKey);
 			}
 		}
 		return retVal;
