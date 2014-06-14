@@ -38,7 +38,7 @@ class FileTransferHandler extends TransferHandler {
 					File file = (File) files.get(i);
 					if(Helper.fileList.contains(file.getAbsolutePath())){
 						JOptionPane.showMessageDialog(null, "File Already Present", "Error", JOptionPane.ERROR_MESSAGE);
-					}else if (file.getName().toLowerCase().endsWith("json") && Helper.isJSONValid(file)) {
+					}else if (Helper.isJSONValid(file)) {
 						Helper.fileList.add(file.getAbsolutePath());
 						tpc.addTab(file.toString());
 					}
