@@ -176,8 +176,13 @@ public class Helper {
 			new JSONObject(contents);
 			return true;
 		} catch (JSONException ex) {
-			JOptionPane.showMessageDialog(null, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
-			return false;
+			try {
+                new JSONArray(contents);
+                return true;
+            } catch(JSONException je) {
+            	JOptionPane.showMessageDialog(null, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
+    			return false;
+            }
 		}
 	}
 	/**

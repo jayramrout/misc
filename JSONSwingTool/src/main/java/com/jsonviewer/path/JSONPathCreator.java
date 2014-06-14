@@ -36,6 +36,7 @@ public class JSONPathCreator {
 	public static Set getJSONKeys(String jsonContent) {
 		JSONObject object = null;
 		JSONArray array = null;
+		JSONViewer.treeSet = new TreeSet();
 		try {
 			object = new JSONObject(jsonContent);
 		} catch (JSONException e) {
@@ -45,10 +46,10 @@ public class JSONPathCreator {
 			}
 		}
 		if (object != null) {
-			getMapFromJSONObject("", object);
+			getMapFromJSONObject("$", object);
 
 		} else {
-			getListFromJSONArray("", array);
+			getListFromJSONArray("$", array);
 		}
 		return null;
 	}
@@ -85,7 +86,6 @@ public class JSONPathCreator {
 				getMapFromJSONObject(jsonPathKey+ "." + key, (JSONObject) val);
 			} else {
 				JSONViewer.treeSet.add(jsonPathKey+"."+key);
-				//System.out.println(jsonPathKey+"."+key);
 			}
 		}
 		return retVal;
@@ -107,7 +107,7 @@ public class JSONPathCreator {
 			} else if (val instanceof JSONArray) {
 				getListFromJSONArray(jsonPathKey+"["+i+"]", (JSONArray) val);
 			} else {
-				System.out.println(jsonPathKey);
+				System.out.println(" From JSON Aray : "+jsonPathKey);
 			}
 		}
 		return retVal;

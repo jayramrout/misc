@@ -36,6 +36,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.text.JTextComponent;
 
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
@@ -117,18 +121,25 @@ public class JSONViewer extends JFrame implements ActionListener {
 		searchPanel.add(jComboBoxQuery, BorderLayout.CENTER);
 		searchPanel.add(queryButton, BorderLayout.EAST);
 
-		final JPopupMenu popupMenu = new JPopupMenu();
+		/*final JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem clearItem = new JMenuItem("Clear Text");
 		JMenuItem copyItem = new JMenuItem("Copy");
 		JMenuItem cutItem = new JMenuItem("Cut");
 
 		popupMenu.add(clearItem);
 		popupMenu.add(copyItem);
-		popupMenu.add(cutItem);
-		final JTextArea consoleTextArea = new JTextArea();
+		popupMenu.add(cutItem);*/
+		
+		
+		final RSyntaxTextArea consoleTextArea = new RSyntaxTextArea(20, 60);
+		consoleTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+		consoleTextArea.setCodeFoldingEnabled(true);
+		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(consoleTextArea);
+		
+//		final JTextArea consoleTextArea = new JTextArea();
 
 		// m_searchText.setComponentPopupMenu(popupMenu);
-		consoleTextArea.setComponentPopupMenu(popupMenu);
+		/*consoleTextArea.setComponentPopupMenu(popupMenu);
 
 		clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -146,11 +157,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.cut();
 			}
-		});
-
-		consoleTextArea.setForeground(Color.RED);
-		// consoleTextArea.setEditable(false);
-		JScrollPane consoleScrollPane = new JScrollPane(consoleTextArea);
+		});*/
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(
 				consoleTextArea));
@@ -160,7 +167,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		JPanel outputPanel = new JPanel();
 		outputPanel.setLayout(new BorderLayout());
-		outputPanel.add(consoleScrollPane, BorderLayout.CENTER);
+		outputPanel.add(jsonTextScrollPane, BorderLayout.CENTER);
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -241,7 +248,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		System.out.println("== " + fileName.substring(fileName.lastIndexOf("\\")+1) + " ==");
 		for (String query : queryString) {
 			if (query != null && query.length() > 0) {
-				System.out.println("\t" + query + ":");
+				System.out.println("\t\"" + query + "\":");
 				Object object = readJsonPath(new Helper().getJSONString(fileName), query);// JsonPath.read(json,
 																			// query);
 				if (object != null) {
