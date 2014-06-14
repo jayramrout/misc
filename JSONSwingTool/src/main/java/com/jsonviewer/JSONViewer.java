@@ -121,14 +121,14 @@ public class JSONViewer extends JFrame implements ActionListener {
 		searchPanel.add(jComboBoxQuery, BorderLayout.CENTER);
 		searchPanel.add(queryButton, BorderLayout.EAST);
 
-		final JPopupMenu popupMenu = new JPopupMenu();
+		/*final JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem clearItem = new JMenuItem("Clear Text");
 		JMenuItem copyItem = new JMenuItem("Copy");
 		JMenuItem cutItem = new JMenuItem("Cut");
 
 		popupMenu.add(clearItem);
 		popupMenu.add(copyItem);
-		popupMenu.add(cutItem);
+		popupMenu.add(cutItem);*/
 		
 		
 		final RSyntaxTextArea consoleTextArea = new RSyntaxTextArea(20, 60);
@@ -139,7 +139,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 //		final JTextArea consoleTextArea = new JTextArea();
 
 		// m_searchText.setComponentPopupMenu(popupMenu);
-		consoleTextArea.setComponentPopupMenu(popupMenu);
+		/*consoleTextArea.setComponentPopupMenu(popupMenu);
 
 		clearItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -157,7 +157,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				consoleTextArea.cut();
 			}
-		});
+		});*/
 
 		PrintStream printStream = new PrintStream(new CustomOutputStream(
 				consoleTextArea));
