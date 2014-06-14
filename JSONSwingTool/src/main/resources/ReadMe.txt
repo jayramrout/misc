@@ -1,5 +1,3 @@
-Drag and Drop the json file to the Application 
-
 { "store": {
     "book": [ 
       { "category": "reference",
@@ -20,6 +18,9 @@ Drag and Drop the json file to the Application
     }
   }
 }
+
+
+Drag and Drop the json file to the Application 
 
 All authors: "$.store.book[*].author"
 Author of first book in store: "$.store.book[1].author"
