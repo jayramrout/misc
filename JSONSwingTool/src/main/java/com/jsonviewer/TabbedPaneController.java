@@ -145,6 +145,7 @@ class TabbedPaneController {
 		jsonTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		jsonTextArea.setCodeFoldingEnabled(true);
 		jsonTextArea.setEditable(false);
+		jsonTextArea.setTransferHandler(fileTransferHandler);
 		
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
 
