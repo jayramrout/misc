@@ -240,13 +240,13 @@ public class ResultModel {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 
-			File file = new File(System.getProperty("user.dir") + "/resources/NHSchemas.json");
+			File file = new File(System.getProperty("user.dir") + "/resources/Test.json");
 
-			String query = "SELECT TBCREATOR as SCHEMA , TBNAME , NAME as COLUMN , COLTYPE , LENGTH from sysibm.syscolumns where tbcreator like 'ANI%' and (tbname like 'T0%' or tbname like 'TF%' or tbname like 'TC%' or tbname like 'TX%')";
+			String query = "SELECT TBCREATOR as SCHEMA , TBNAME , NAME as COLUMN , COLTYPE , LENGTH from sysibm.syscolumns where tbcreator like '<GiveTableName>%' and (tbname like '<tableName>%' or tbname like '<tableName>%' or tbname like 'TableName%' or tbname like '<TableName>%')";
 			Class.forName("com.ibm.db2.jcc.DB2Driver");
 
 			long startTimeToGetConnection = System.currentTimeMillis();
-			conn = DriverManager.getConnection("jdbc:db2://172.16.32.30:446/DSNA:currentSchema=ANIC01SS;", "ITDB203", "ITDB203X");
+			conn = DriverManager.getConnection("", "", "");
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 			long endTimeToGetConnection = System.currentTimeMillis();
 			System.out.println("Got Connected to DB in ...." + (endTimeToGetConnection - startTimeToGetConnection) / 1000 + " Seconds");
@@ -261,7 +261,7 @@ public class ResultModel {
 			long endTime = System.currentTimeMillis();
 			System.out.println("Total Time For Executing the Query in Seconds :" + (endTime - startTime) / 1000);
 
-			DataBase dataBase = new DataBase("NewHeights");
+			DataBase dataBase = new DataBase("DataBase");
 			List<Schema> schemaList = new ArrayList<Schema>();
 			List<Column> columnList = null;
 			List<Table> tableList = null;
