@@ -1,0 +1,14 @@
+17:15:26,265 DEBUG [JsonPath] New JsonPath:
+---------------------------------------------------------------------------
+PATH: $.store.bicycle.color
+Fragment                                          Root      End       Array     
+---------------------------------------------------------------------------
+$                                                 true      false     false     
+store                                             false     false     false     
+bicycle                                           false     false     false     
+color                                             false     true      false     
+
+17:15:26,276 DEBUG [JsonPath] Applying filter: PassthroughFilter => '$' to {"store":{"book":[{"author":"Nigel Rees","title":"Sayings of the Century","category":"reference","price":8.95},{"author":"Evelyn Waugh","title":"Sword of Honour","category":"fiction","price":12.99,"isbn":"0-553-21311-3"}],"bicycle":{"price":19.95,"color":"red"}}}
+17:15:26,276 DEBUG [JsonPath] Applying filter: FieldFilter => 'store' to {"store":{"book":[{"author":"Nigel Rees","title":"Sayings of the Century","category":"reference","price":8.95},{"author":"Evelyn Waugh","title":"Sword of Honour","category":"fiction","price":12.99,"isbn":"0-553-21311-3"}],"bicycle":{"price":19.95,"color":"red"}}}
+17:15:26,276 DEBUG [JsonPath] Applying filter: FieldFilter => 'bicycle' to {"book":[{"author":"Nigel Rees","title":"Sayings of the Century","category":"reference","price":8.95},{"author":"Evelyn Waugh","title":"Sword of Honour","category":"fiction","price":12.99,"isbn":"0-553-21311-3"}],"bicycle":{"price":19.95,"color":"red"}}
+17:15:26,276 DEBUG [JsonPath] Applying filter: FieldFilter => 'color' to {"price":19.95,"color":"red"}
