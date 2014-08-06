@@ -1,6 +1,16 @@
 package com.jsonviewer;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.VK_A;
+import static java.awt.event.KeyEvent.VK_CONTROL;
+import static java.awt.event.KeyEvent.VK_DOWN;
+import static java.awt.event.KeyEvent.VK_END;
+import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_HOME;
+import static java.awt.event.KeyEvent.VK_LEFT;
+import static java.awt.event.KeyEvent.VK_RIGHT;
+import static java.awt.event.KeyEvent.VK_SHIFT;
+import static java.awt.event.KeyEvent.VK_UP;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -16,12 +26,15 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -35,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
@@ -58,8 +72,12 @@ public class JSONViewer extends JFrame implements ActionListener {
 	private JComboBox jComboBoxQuery;
 	private JButton queryButton;
 	public static Set<String> treeSet = new TreeSet<String>();
-	
-	
+	static Integer ignoreArray[] = {VK_A, VK_ESCAPE, VK_UP, VK_DOWN, 10, VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT, VK_RIGHT, VK_END};
+	public static List<Integer> ignoreKeyCodes = new ArrayList<Integer>();
+
+	static {
+		ignoreKeyCodes = Arrays.asList(ignoreArray);
+	}
 	public JSONViewer() {
 		init();
 		setIcon();
@@ -89,14 +107,16 @@ public class JSONViewer extends JFrame implements ActionListener {
 				.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
-						if (e.getKeyCode() != 38 && e.getKeyCode() != 40
-								&& e.getKeyCode() != 10 && e.getKeyCode() != 36
-								&& e.getKeyCode() != 16 && e.getKeyCode() != 17
-								&& e.getKeyCode() != 37 && e.getKeyCode() != 39
-								&& e.getKeyCode() != 35) {
+//						System.out.println(" Key Char ="+e.getKeyChar() + " Key Code = "+e.getKeyCode());
+						int tempCaretPosition = 0;
+						ComboBoxEditor editor = jComboBoxQuery.getEditor();
+						JTextField textField = (JTextField )editor.getEditorComponent();
+						tempCaretPosition = textField.getCaretPosition();
+						if(ignoreKeyCodes.contains(e.getKeyCode())){
+							// DO NOTHING
+						}else {
 							String a = jComboBoxQuery.getEditor().getItem().toString();
 							jComboBoxQuery.removeAllItems();
-
 							int counter = 0;
 							jComboBoxQuery.addItem("");
 							for (String keys : treeSet) {
@@ -112,6 +132,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 							if (counter != 0) {
 								jComboBoxQuery.showPopup();
 							}
+							textField.setCaretPosition(tempCaretPosition);
 						}
 					}
 				});
