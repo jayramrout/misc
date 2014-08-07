@@ -23,9 +23,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -269,10 +272,35 @@ public class JSONViewer extends JFrame implements ActionListener {
 				list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				
 				JPanel searchPanelResource = new JPanel(new BorderLayout());
-				JTextArea  resourceQuery = new JTextArea("Query in Progress...");
+				final JTextArea  resourceQuery = new JTextArea("Query in Progress...");
 				searchPanelResource.add(resourceQuery, BorderLayout.CENTER);
 				searchPanelResource.setBorder(BorderFactory.createLineBorder(Color.black));
-				
+				resourceQuery.addKeyListener(new KeyListener() {
+					
+					@Override
+					public void keyTyped(KeyEvent paramKeyEvent) {
+						philosophers.removeAllElements();
+						
+						Path dir = FileSystems.getDefault().getPath( "D:\\workspaceH2K\\Calculation" );
+						List<String> fileList = new ArrayList<String>();
+						List<String> fileNames = Helper.getFileNames(fileList, dir , resourceQuery.getText());
+						for(String filePath : fileNames){
+							philosophers.addElement(filePath);	
+						}
+					}
+					
+					@Override
+					public void keyReleased(KeyEvent paramKeyEvent) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void keyPressed(KeyEvent paramKeyEvent) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				
 				JPanel jPanelLower = new JPanel(new BorderLayout());
 				jPanelLower.setSize(new Dimension(200, 200));

@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -236,4 +239,31 @@ public class Helper {
 		}
 		return jsonBuilder.toString();
 	} 
+	/**
+	 * 
+	 * @param fileNames
+	 * @param dir
+	 * @param fileName
+	 * @return
+	 */
+	public static List<String> getFileNames(List<String> fileNames, Path dir , String fileName){
+	    try {
+	        DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+	        for (Path path : stream) {
+	            if(path.toFile().isDirectory()){
+	            	getFileNames(fileNames, path, fileName);
+	            }else {
+	            	if(path.getFileName().toString().contains(fileName)){
+	            		fileNames.add(path.toAbsolutePath().toString());
+	            		System.out.println(path.getFileName());
+	            	}
+	                
+	            }
+	        }
+	        stream.close();
+	    }catch(IOException e){
+	        e.printStackTrace();
+	    }
+	    return fileNames;
+	}
 }
