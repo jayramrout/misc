@@ -255,9 +255,8 @@ public class Helper {
 	            }else {
 	            	if(path.getFileName().toString().contains(fileName)){
 	            		fileNames.add(path.toAbsolutePath().toString());
-	            		System.out.println(path.getFileName());
+//	            		System.out.println(path.getFileName());
 	            	}
-	                
 	            }
 	        }
 	        stream.close();

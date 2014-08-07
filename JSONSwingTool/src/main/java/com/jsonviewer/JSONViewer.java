@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetAddress;
@@ -43,10 +44,12 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -77,15 +80,28 @@ public class JSONViewer extends JFrame implements ActionListener {
 	public static Set<String> treeSet = new TreeSet<String>();
 	static Integer ignoreArray[] = {VK_A, VK_ESCAPE, VK_UP, VK_DOWN, 10, VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT, VK_RIGHT, VK_END};
 	public static List<Integer> ignoreKeyCodes = new ArrayList<Integer>();
-
+	private String rootFolderPath = null;
 	static {
 		ignoreKeyCodes = Arrays.asList(ignoreArray);
 	}
 	public JSONViewer() {
 		init();
 		setIcon();
+//		rootFolderToSearch();
 	}
-	
+	public void rootFolderToSearch(){
+		JLabel jsonRootFolderLabel = new JLabel("Enter Root Folder for Searching the json File:");
+	    JTextField jsonRootFolderField = new JTextField(10);
+	    Object[] array = { jsonRootFolderLabel, jsonRootFolderField};
+	    int res = JOptionPane.showConfirmDialog(null, array, "", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+	    if (res == JOptionPane.OK_OPTION) {
+	    	rootFolderPath = jsonRootFolderField.getText();
+	    	if(!new File(rootFolderPath).isDirectory()){
+	    		JOptionPane.showMessageDialog(null, new String[] { "Root Folder is not correct Add again" }, "Error", JOptionPane.ERROR_MESSAGE);
+	  	      	System.exit(0);
+	    	}
+	    }
+	}
 	public void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		createMenuBar();
@@ -224,8 +240,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 	/**
 	 * Creates the menubar and adds the action listener to it.
 	 */
-	private DefaultListModel philosophers;
-	private JList list;
+	private DefaultListModel filesModel;
+	private JList jList;
 
 	public void createMenuBar(){
 		JMenuBar menuBar = new JMenuBar();
@@ -259,33 +275,25 @@ public class JSONViewer extends JFrame implements ActionListener {
 		openResource.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				philosophers = new DefaultListModel();
-				philosophers.addElement("Socrates");
-				philosophers.addElement("Plato");
-				philosophers.addElement("Aristotle");
-				philosophers.addElement("St. Thomas Aquinas");
-				philosophers.addElement("Soren Kierkegaard");
-				philosophers.addElement("Immanuel Kant");
-				philosophers.addElement("Friedrich Nietzsche");
-				philosophers.addElement("Hannah Arendt");
-				list = new JList(philosophers);
-				list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+				filesModel = new DefaultListModel();
+				jList = new JList(filesModel);
+				jList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				
 				JPanel searchPanelResource = new JPanel(new BorderLayout());
-				final JTextArea  resourceQuery = new JTextArea("Query in Progress...");
+				final JTextArea  resourceQuery = new JTextArea();
 				searchPanelResource.add(resourceQuery, BorderLayout.CENTER);
 				searchPanelResource.setBorder(BorderFactory.createLineBorder(Color.black));
 				resourceQuery.addKeyListener(new KeyListener() {
 					
 					@Override
 					public void keyTyped(KeyEvent paramKeyEvent) {
-						philosophers.removeAllElements();
+						filesModel.removeAllElements();
 						
-						Path dir = FileSystems.getDefault().getPath( "D:\\workspaceH2K\\Calculation" );
+						Path dir = FileSystems.getDefault().getPath(rootFolderPath);
 						List<String> fileList = new ArrayList<String>();
 						List<String> fileNames = Helper.getFileNames(fileList, dir , resourceQuery.getText());
 						for(String filePath : fileNames){
-							philosophers.addElement(filePath);	
+							filesModel.addElement(filePath);
 						}
 					}
 					
@@ -304,7 +312,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 				
 				JPanel jPanelLower = new JPanel(new BorderLayout());
 				jPanelLower.setSize(new Dimension(200, 200));
-				jPanelLower.add(list,BorderLayout.CENTER);
+				jPanelLower.add(jList,BorderLayout.CENTER);
 				jPanelLower.setBorder(BorderFactory.createLineBorder(Color.black));
 				
 				final JDialog dlg = new JDialog(JSONViewer.this, "Resource Dialog", true);
