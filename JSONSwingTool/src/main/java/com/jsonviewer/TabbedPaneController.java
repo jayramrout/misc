@@ -145,7 +145,7 @@ class TabbedPaneController {
 			e.printStackTrace();
 		}
 		TreeView tv = new TreeView();
-		JTree treePane = tv.getTreeView(is);
+		JTree treePane = tv.getTreeView(is, null);
 		treePane.setTransferHandler(fileTransferHandler);
 
 		JScrollPane treeScrollPane = new JScrollPane(treePane);

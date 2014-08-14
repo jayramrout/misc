@@ -298,6 +298,32 @@ public class Helper {
 	}
 	/**
 	 * 
+	 * @param zippedBase64Str
+	 * @return
+	 * @throws IOException
+	 * @throws DataFormatException
+	 */
+	public static String decompressContent(String content) throws IOException,
+			DataFormatException {
+		String result = null;
+		content.length();
+		System.out.println(content.trim().length());
+		byte[] bytes = Base64.base64ToByteArray(content.trim());
+		GZIPInputStream zi = null;
+		try {
+			zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
+			result = IOUtils.toString(zi);
+		} finally {
+			IOUtils.closeQuietly(zi);
+		}
+		//System.out.println("decompressed " + result);
+
+		return result;
+
+	}
+	
+	/**
+	 * 
 	 * @param srcTxt
 	 * @return
 	 * @throws IOException

@@ -29,9 +29,12 @@ public class TreeView extends javax.swing.JPanel {
     private void init() {
     }
 
-    public JTree getTreeView(InputStream is) {
+    public JTree getTreeView(InputStream is , String contents) {
         try {
-            String contents = Helper.getInputStreamContents(is);
+        	if(contents == null){
+        		contents = Helper.getInputStreamContents(is);
+        	}
+        	
             JSONObject object = null;
             JSONArray array = null;
             DefaultMutableTreeNode node = new DefaultMutableTreeNode("JSONObject");
@@ -46,8 +49,17 @@ public class TreeView extends javax.swing.JPanel {
                     ArrayList<Object> list = Helper.getListFromJSONArray(array);
                     Helper.getNodeFromList(list, node);
                 } catch(JSONException je) {
-                	JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
-                	return null;
+                	try {
+                		if(is == null){
+                			JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
+                        	return null;
+                		}
+                		getTreeView(null, Helper.decompressContent(contents));
+                	}catch(JSONException jje) {
+                    	JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
+                    	return null;
+                		
+                	}
                 }
             }
             jsonTree = new JTree(node);

@@ -337,9 +337,21 @@ public class JSONViewer extends JFrame implements ActionListener {
 		openItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				FileDialog fd = new FileDialog(JSONViewer.this, "Select File", FileDialog.LOAD);
+				fd.setMultipleMode(true);
 				fd.show();
 				String filePath = null;
-				if (fd.getFile() != null) {
+				if (fd.getFiles() != null) {
+					for(File file : fd.getFiles()){
+						filePath = file.getAbsolutePath();
+						setTitle(file.getName());
+						try {
+							tabbedPaneController.addTab(filePath);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+				/*if (fd.getFile() != null) {
 					filePath = fd.getDirectory() + fd.getFile();
 					setTitle(fd.getFile());
 					try {
@@ -347,7 +359,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}
+				}*/
 			}
 		});
 		
