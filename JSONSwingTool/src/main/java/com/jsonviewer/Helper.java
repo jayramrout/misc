@@ -1,6 +1,7 @@
 package com.jsonviewer;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,14 +19,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Scanner;
+import java.util.zip.DataFormatException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.solr.common.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 /**
  * @author Jayram Rout
  *
@@ -264,5 +270,76 @@ public class Helper {
 	        e.printStackTrace();
 	    }
 	    return fileNames;
+	}
+	
+	/**
+	 * 
+	 * @param zippedBase64Str
+	 * @return
+	 * @throws IOException
+	 * @throws DataFormatException
+	 */
+	public static String decompress(String filePath) throws IOException,
+			DataFormatException {
+		String result = null;
+		;
+		byte[] bytes = Base64.base64ToByteArray(readFileAsString(filePath));
+		GZIPInputStream zi = null;
+		try {
+			zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
+			result = IOUtils.toString(zi);
+		} finally {
+			IOUtils.closeQuietly(zi);
+		}
+		System.out.println("decompressed " + result);
+
+		return result;
+
+	}
+	/**
+	 * 
+	 * @param srcTxt
+	 * @return
+	 * @throws IOException
+	 */
+	public static String compress(String srcTxt) throws IOException {
+		ByteArrayOutputStream rstBao = new ByteArrayOutputStream();
+		GZIPOutputStream zos = new GZIPOutputStream(rstBao);
+		zos.write(srcTxt.getBytes());
+		IOUtils.closeQuietly(zos);
+
+		// byte[] bytes = ByteCompressor.compress(rstBao.toByteArray());
+		byte[] bytes = rstBao.toByteArray();
+		String comString = Base64.byteArrayToBase64(bytes, 0, bytes.length);
+		System.out.println("Compressed" + comString);
+		try {
+			decompress(comString);
+		} catch (DataFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return comString;
+
+	}	
+	/**
+	 * 
+	 * @param filePath
+	 * @return
+	 * @throws java.io.IOException
+	 */
+	
+	private static String readFileAsString(String filePath)
+			throws java.io.IOException {
+		StringBuffer fileData = new StringBuffer(1000);
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		char[] buf = new char[1024];
+		int numRead = 0;
+		while ((numRead = reader.read(buf)) != -1) {
+			String readData = String.valueOf(buf, 0, numRead);
+			fileData.append(readData);
+			buf = new char[1024];
+		}
+		reader.close();
+		return fileData.toString();
 	}
 }
