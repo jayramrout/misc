@@ -154,7 +154,7 @@ class TabbedPaneController {
 		jsonTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		jsonTextArea.setCodeFoldingEnabled(true);
 		jsonTextArea.setEditable(true);
-		jsonTextArea.setTransferHandler(fileTransferHandler);
+//		jsonTextArea.setTransferHandler(fileTransferHandler);
 		
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
 
@@ -172,7 +172,7 @@ class TabbedPaneController {
 		}
 		
 		JSplitPane upperSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, jsonTextScrollPane);
-		upperSplitPane.setDividerLocation(600);
+		upperSplitPane.setDividerLocation(800);
 
 		jTabbedPane.addTab(name, null, (Component) upperSplitPane, filePath);
 		jTabbedPane.setSelectedComponent((Component) upperSplitPane);

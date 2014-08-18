@@ -401,8 +401,9 @@ public class JSONViewer extends JFrame implements ActionListener {
 				if (object != null) {
 					if (object instanceof List) {
 						List<Object> objList = (List<Object>) object;
+						int idx = 0;
 						for (Object obj : objList) {
-							System.out.println("\t\t" + obj);
+							System.out.println("\t\t" + "["+idx++ +"]"+obj);
 						}
 					} else {
 						System.out.println("\t\t" + object);
