@@ -50,11 +50,13 @@ public class TreeView extends javax.swing.JPanel {
                     Helper.getNodeFromList(list, node);
                 } catch(JSONException je) {
                 	try {
-                		if(is == null){
+                		JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
+                    	return null;
+/*                		if(is == null){
                 			JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
                         	return null;
                 		}
-                		getTreeView(null, Helper.decompressContent(contents));
+*///                		getTreeView(null, Helper.decompressContent(contents));
                 	}catch(JSONException jje) {
                     	JOptionPane.showMessageDialog(this, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
                     	return null;

@@ -28,7 +28,7 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 import com.jsonviewer.path.JSONPathCreator;
 
 /**
- * @author Jayram Rout Changes Done
+ * @author Jayram Rout
  *
  */
 class TabbedPaneController {
@@ -146,6 +146,9 @@ class TabbedPaneController {
 		}
 		TreeView tv = new TreeView();
 		JTree treePane = tv.getTreeView(is, null);
+		
+		if(treePane == null) return;
+		
 		treePane.setTransferHandler(fileTransferHandler);
 
 		JScrollPane treeScrollPane = new JScrollPane(treePane);
