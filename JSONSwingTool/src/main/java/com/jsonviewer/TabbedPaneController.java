@@ -147,7 +147,7 @@ class TabbedPaneController {
 		TreeView tv = new TreeView();
 		JTree treePane = tv.getTreeView(is, null);
 		
-		if(treePane == null) return;
+		if(treePane == null) return; 
 		
 		treePane.setTransferHandler(fileTransferHandler);
 
