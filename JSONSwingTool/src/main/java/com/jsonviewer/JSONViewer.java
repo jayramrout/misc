@@ -268,7 +268,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 			       KeyEvent.VK_R, KeyEvent.CTRL_MASK + KeyEvent.SHIFT_MASK));
 		
 		optionMenu.add(openResource);
-//		menuBar.add(optionMenu); 
+//		menuBar.add(optionMenu);
 //		private final DefaultListModel philosophers;
 //		private final JList list;
 
