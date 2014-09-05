@@ -32,11 +32,11 @@
 			<artifactId>jackson-mapper-lgpl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.fifesoft</groupId>
 			<artifactId>rsyntaxtextarea</artifactId>
-			<version>1.4.1</version>
-		</dependency> -->
+			<version>2.5.3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-solrj</artifactId>

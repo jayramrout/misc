@@ -11,6 +11,7 @@ import static java.awt.event.KeyEvent.VK_LEFT;
 import static java.awt.event.KeyEvent.VK_RIGHT;
 import static java.awt.event.KeyEvent.VK_SHIFT;
 import static java.awt.event.KeyEvent.VK_UP;
+import static java.awt.event.KeyEvent.VK_ENTER;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -78,7 +79,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 	private JComboBox jComboBoxQuery;
 	private JButton queryButton;
 	public static Set<String> treeSet = new TreeSet<String>();
-	static Integer ignoreArray[] = {VK_A, VK_ESCAPE, VK_UP, VK_DOWN, 10, VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT, VK_RIGHT, VK_END};
+	static Integer ignoreArray[] = {VK_A, VK_ESCAPE, VK_UP, VK_DOWN, VK_ENTER, VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT, VK_RIGHT, VK_END};
 	public static List<Integer> ignoreKeyCodes = new ArrayList<Integer>();
 	private String rootFolderPath = null;
 	static {
@@ -165,16 +166,6 @@ public class JSONViewer extends JFrame implements ActionListener {
 		searchPanel.add(jComboBoxQuery, BorderLayout.CENTER);
 		searchPanel.add(queryButton, BorderLayout.EAST);
 
-		/*final JPopupMenu popupMenu = new JPopupMenu();
-		JMenuItem clearItem = new JMenuItem("Clear Text");
-		JMenuItem copyItem = new JMenuItem("Copy");
-		JMenuItem cutItem = new JMenuItem("Cut");
-
-		popupMenu.add(clearItem);
-		popupMenu.add(copyItem);
-		popupMenu.add(cutItem);*/
-		
-		
 		final RSyntaxTextArea consoleTextArea = new RSyntaxTextArea(20, 60);
 		consoleTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		consoleTextArea.setCodeFoldingEnabled(true);
