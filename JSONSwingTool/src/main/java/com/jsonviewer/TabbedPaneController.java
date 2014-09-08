@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -17,6 +18,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -67,10 +69,14 @@ class TabbedPaneController {
 					RTextScrollPane textScrollPane = (RTextScrollPane)jSplitPane.getComponent(1);
 					JViewport viewPort = (JViewport)textScrollPane.getComponent(0);
 					RSyntaxTextArea textArea = (RSyntaxTextArea)viewPort.getComponent(0);
-//					String fileName = jTabbedPane.getToolTipTextAt(index);
 //					String jsonContent = new Helper().getJSONString(textArea.getText());
 //					JSONPathCreator.getJSONKeys(jsonContent);
 					JSONPathCreator.getJSONKeys(textArea.getText());
+					
+					String fileName = jTabbedPane.getToolTipTextAt(index);
+					JFrame rootFrame = (JFrame) SwingUtilities.getRoot(jTabbedPane);
+			        if(rootFrame != null && fileName != null)
+			        	rootFrame.setTitle(fileName);
 				}
 			}
 		});
