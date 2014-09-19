@@ -24,14 +24,18 @@ public class Zip {
 		Zip appZip = new Zip();
 		File rootFolder = new File(rootFolderPath);
 		String[] children = rootFolder.list();
-		for (int i = 0; i < children.length; i++) {
-			fileList = new ArrayList<String>();
-			File sourceFolderFile = new File(rootFolder, children[i]);
-			sourceFolder = sourceFolderFile.getAbsolutePath();
-			if (sourceFolderFile.isDirectory()) {
-				appZip.generateFileList(sourceFolderFile);
-				appZip.zipIt(sourceFolderFile + ".zip");
+		if(children != null) {
+			System.out.println("Zipping Started...");
+			for (int i = 0; i < children.length; i++) {
+				fileList = new ArrayList<String>();
+				File sourceFolderFile = new File(rootFolder, children[i]);
+				sourceFolder = sourceFolderFile.getAbsolutePath();
+				if (sourceFolderFile.isDirectory()) {
+					appZip.generateFileList(sourceFolderFile);
+					appZip.zipIt(sourceFolderFile + ".zip");
+				}
 			}
+			System.out.println("Zipping Ends...");
 		}
 	}
 	/**

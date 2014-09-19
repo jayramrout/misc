@@ -11,11 +11,16 @@ public class UnZip {
 		UnZip unZip = new UnZip();
 		File rootFolder = new File(outputFolder);
 		String[] children = rootFolder.list();
-		for (int i = 0; i < children.length; i++) {
-			File sourceFolderFile = new File(rootFolder, children[i]);
-			if(sourceFolderFile.getName().endsWith(".zip"))
-				unZip.unZipIt(sourceFolderFile.getAbsolutePath(), outputFolder);
+		if(children != null) {
+			System.out.println("Unzipping Starts...");
+			for (int i = 0; i < children.length; i++) {
+				File sourceFolderFile = new File(rootFolder, children[i]);
+				if(sourceFolderFile.getName().endsWith(".zip"))
+					unZip.unZipIt(sourceFolderFile.getAbsolutePath(), outputFolder);
+			}
+			System.out.println("Unzipping Ends...");
 		}
+		
 	}
 
 	/**
