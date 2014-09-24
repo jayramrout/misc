@@ -60,7 +60,7 @@ public class Helper {
 			String key = ite.next();
 			Object value = map.get(key);
 			if (value instanceof ArrayList) {
-				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", ""));
+				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", "")+" [ ]");
 				getNodeFromList((ArrayList) value, keyNode);
 				node.add(keyNode);
 			} else if (value instanceof HashMap) {
@@ -68,10 +68,10 @@ public class Helper {
 				getNodeFromMap((HashMap) value, keyNode);
 				node.add(keyNode);
 			} else {
-				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", ""));
-				DefaultMutableTreeNode valueNode = new DefaultMutableTreeNode(value.toString().replace("\"", ""));
-				keyNode.add(valueNode);
-				node.add(keyNode);
+				DefaultMutableTreeNode keyValueNode = new DefaultMutableTreeNode(key.replace("\"", "")+" : " + ((value instanceof String) ? "\""+value.toString().replace("\"", "")+"\"" : value));
+//				DefaultMutableTreeNode valueNode = new DefaultMutableTreeNode(value.toString().replace("\"", ""));
+//				keyNode.add(valueNode);
+				node.add(keyValueNode);
 			}
 		}
 		sortchildren(node);
