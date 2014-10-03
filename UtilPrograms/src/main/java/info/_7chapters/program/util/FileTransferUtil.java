@@ -37,7 +37,7 @@ public class FileTransferUtil {
 			System.out.println("Please give ur dac userID and pwd Usage : FileTransferUtil <dacid> <dacpwd>");
 			System.exit(0);
 		}
-		String server = "172.16.32.30";
+		String server = "";
 		int port = 21;
 		String dacUserName = credentials[0];
 		String dacPassword = credentials[1];
