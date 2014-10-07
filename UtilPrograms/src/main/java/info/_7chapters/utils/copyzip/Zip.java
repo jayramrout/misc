@@ -1,4 +1,4 @@
-package info._7chapters.program.utils.copyzip;
+package info._7chapters.utils.copyzip;
 
 import java.io.File;
 import java.io.FileInputStream;

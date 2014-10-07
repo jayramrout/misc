@@ -1,4 +1,4 @@
-package info._7chapters.program.utils.ftp;
+package info._7chapters.utils.ftp;
 
 
 import java.io.BufferedOutputStream;
