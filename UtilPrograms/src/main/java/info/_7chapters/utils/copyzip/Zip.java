@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class Zip {
+public class Zip { 
 
 	private static List<String> fileList;
 	private static String sourceFolder = "";
