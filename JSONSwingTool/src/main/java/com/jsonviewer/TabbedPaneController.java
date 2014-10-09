@@ -10,11 +10,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.JViewport;
@@ -65,7 +65,8 @@ class TabbedPaneController {
 			public void stateChanged(ChangeEvent e) {
 				int index = jTabbedPane.getSelectedIndex();
 				if (index != -1) {
-					JSplitPane jSplitPane = (JSplitPane)jTabbedPane.getComponentAt(index);
+					JTabbedPane jSplitPane = (JTabbedPane)jTabbedPane.getComponentAt(index);
+//					JSplitPane jSplitPane = (JSplitPane)jTabbedPane.getComponentAt(index);
 					RTextScrollPane textScrollPane = (RTextScrollPane)jSplitPane.getComponent(1);
 					JViewport viewPort = (JViewport)textScrollPane.getComponent(0);
 					RSyntaxTextArea textArea = (RSyntaxTextArea)viewPort.getComponent(0);
@@ -158,7 +159,7 @@ class TabbedPaneController {
 		treePane.setTransferHandler(fileTransferHandler);
 
 		JScrollPane treeScrollPane = new JScrollPane(treePane);
-
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		RSyntaxTextArea jsonTextArea = new RSyntaxTextArea(20, 60);
 		jsonTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		jsonTextArea.setCodeFoldingEnabled(true);
@@ -166,7 +167,8 @@ class TabbedPaneController {
 //		jsonTextArea.setTransferHandler(fileTransferHandler);
 		
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
-
+		jsonTextScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			if (name.equals("Store")) {
@@ -180,11 +182,13 @@ class TabbedPaneController {
 			e.printStackTrace();
 		}
 		
-		JSplitPane upperSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, jsonTextScrollPane);
-		upperSplitPane.setDividerLocation(800);
-
-		jTabbedPane.addTab(name, null, (Component) upperSplitPane, filePath);
-		jTabbedPane.setSelectedComponent((Component) upperSplitPane);
+		JTabbedPane treeJsonTab = new JTabbedPane();
+		treeJsonTab.addTab("Tree", treeScrollPane);
+		treeJsonTab.addTab("Json", jsonTextScrollPane);
+		
+		jTabbedPane.addTab(name, null, (Component) treeJsonTab, filePath);
+		jTabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		jTabbedPane.setSelectedComponent((Component) treeJsonTab);
 		jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
 	}
 	private void initTabComponent() {

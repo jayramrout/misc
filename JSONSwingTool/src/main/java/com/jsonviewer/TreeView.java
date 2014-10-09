@@ -11,7 +11,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.json.JSONArray;
@@ -42,7 +41,7 @@ public class TreeView extends javax.swing.JPanel {
 			JSONObject object = null;
 			JSONArray array = null;
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-					"JSONObject");
+					"ROOT");
 
 			try {
 				object = new JSONObject(contents);
@@ -80,6 +79,7 @@ public class TreeView extends javax.swing.JPanel {
 				}
 			}
 			jsonTree = new JTree(node);
+			jsonTree.setShowsRootHandles(true);
 		} catch (JSONException ex) {
 			Logger.getLogger(TreeView.class.getName()).log(Level.SEVERE, null,
 					ex);
