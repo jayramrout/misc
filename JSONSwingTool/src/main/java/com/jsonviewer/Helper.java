@@ -24,6 +24,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.commons.io.IOUtils;
@@ -39,7 +40,14 @@ import org.json.JSONObject;
 public class Helper {
 	
 	static List fileList = new ArrayList();
+	static String[] columnNames = { "Property", "Value" };
+	static Object[][] data = { { "", "" } };
+//	private static JTable table = new JTable(data, columnNames);
+	private static DynamicTable table = new DynamicTable();
 	
+	public static DynamicTable getCommonTable(){
+		return table;
+	}
 	public static String getInputStreamContents(InputStream is) throws IOException {
 		String retval = "";
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));

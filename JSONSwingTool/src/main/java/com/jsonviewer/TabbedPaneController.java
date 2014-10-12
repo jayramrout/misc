@@ -15,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
@@ -38,7 +40,6 @@ class TabbedPaneController {
 	JTabbedPane jTabbedPane;
 	JPanel defaultTreePanel = null;
 	FileTransferHandler fileTransferHandler;
-
 	boolean noTabs = true;
 
 	String fileSeparator;
@@ -65,19 +66,26 @@ class TabbedPaneController {
 			public void stateChanged(ChangeEvent e) {
 				int index = jTabbedPane.getSelectedIndex();
 				if (index != -1) {
-					JTabbedPane jSplitPane = (JTabbedPane)jTabbedPane.getComponentAt(index);
-//					JSplitPane jSplitPane = (JSplitPane)jTabbedPane.getComponentAt(index);
-					RTextScrollPane textScrollPane = (RTextScrollPane)jSplitPane.getComponent(1);
-					JViewport viewPort = (JViewport)textScrollPane.getComponent(0);
-					RSyntaxTextArea textArea = (RSyntaxTextArea)viewPort.getComponent(0);
-//					String jsonContent = new Helper().getJSONString(textArea.getText());
-//					JSONPathCreator.getJSONKeys(jsonContent);
+					JTabbedPane jSplitPane = (JTabbedPane) jTabbedPane
+							.getComponentAt(index);
+					// JSplitPane jSplitPane =
+					// (JSplitPane)jTabbedPane.getComponentAt(index);
+					RTextScrollPane textScrollPane = (RTextScrollPane) jSplitPane
+							.getComponent(1);
+					JViewport viewPort = (JViewport) textScrollPane
+							.getComponent(0);
+					RSyntaxTextArea textArea = (RSyntaxTextArea) viewPort
+							.getComponent(0);
+					// String jsonContent = new
+					// Helper().getJSONString(textArea.getText());
+					// JSONPathCreator.getJSONKeys(jsonContent);
 					JSONPathCreator.getJSONKeys(textArea.getText());
-					
+
 					String fileName = jTabbedPane.getToolTipTextAt(index);
-					JFrame rootFrame = (JFrame) SwingUtilities.getRoot(jTabbedPane);
-			        if(rootFrame != null && fileName != null)
-			        	rootFrame.setTitle(fileName);
+					JFrame rootFrame = (JFrame) SwingUtilities
+							.getRoot(jTabbedPane);
+					if (rootFrame != null && fileName != null)
+						rootFrame.setTitle(fileName);
 				}
 			}
 		});
@@ -110,7 +118,9 @@ class TabbedPaneController {
 		}
 		init();
 	}
+
 	boolean initializeTab = true;
+
 	private void init() {
 		noTabs = true;
 		if (initializeTab) {
@@ -119,6 +129,7 @@ class TabbedPaneController {
 			jPanelMain.repaint();
 		}
 	}
+
 	/**
 	 * @param name
 	 * @param fileName
@@ -127,21 +138,23 @@ class TabbedPaneController {
 		createPanel(name, fileName);
 		initTabComponent();
 	}
+
 	/**
 	 * 
 	 * @param name
 	 * @param filePath
-	 * This API first checks if the file is already opened. Of Opened then it 
-	 * gives a popup Error saying File Already Present.
+	 *            This API first checks if the file is already opened. Of Opened
+	 *            then it gives a popup Error saying File Already Present.
 	 */
 	private void createPanel(String name, String filePath) {
-		if(Helper.fileList.contains(filePath)){
-			JOptionPane.showMessageDialog(null, "File Already Present", "Error", JOptionPane.ERROR_MESSAGE);
+		if (Helper.fileList.contains(filePath)) {
+			JOptionPane.showMessageDialog(null, "File Already Present",
+					"Error", JOptionPane.ERROR_MESSAGE);
 			return;
-		}else{
+		} else {
 			Helper.fileList.add(filePath);
 		}
-		
+
 		InputStream is = null;
 		try {
 			if (name.equals("Store"))
@@ -153,46 +166,63 @@ class TabbedPaneController {
 		}
 		TreeView tv = new TreeView();
 		JTree treePane = tv.getTreeView(is, null);
-		
-		if(treePane == null) return; 
-		
+
+		if (treePane == null)
+			return;
+
 		treePane.setTransferHandler(fileTransferHandler);
 
 		JScrollPane treeScrollPane = new JScrollPane(treePane);
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
 		RSyntaxTextArea jsonTextArea = new RSyntaxTextArea(20, 60);
 		jsonTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		jsonTextArea.setCodeFoldingEnabled(true);
 		jsonTextArea.setEditable(true);
-//		jsonTextArea.setTransferHandler(fileTransferHandler);
-		
+		// jsonTextArea.setTransferHandler(fileTransferHandler);
+
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
-		jsonTextScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		
+		jsonTextScrollPane.setBorder(BorderFactory
+				.createEmptyBorder(0, 0, 0, 0));
+
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			if (name.equals("Store")) {
-				jsonTextArea.read(new InputStreamReader(getClass().getResourceAsStream("/ReadMe.txt")), null);
+				jsonTextArea.read(new InputStreamReader(getClass()
+						.getResourceAsStream("/ReadMe.txt")), null);
 			} else {
-				Object json = mapper.readValue(new Helper().getJSONString(filePath), Object.class);
-//				System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-				jsonTextArea.read(new StringReader(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)), null);
+				Object json = mapper.readValue(
+						new Helper().getJSONString(filePath), Object.class);
+				// System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+				jsonTextArea.read(
+						new StringReader(mapper
+								.writerWithDefaultPrettyPrinter()
+								.writeValueAsString(json)), null);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
+		// JTable table = new JTable();
+		DynamicTable dTable = new DynamicTable();
+		tv.setDynamicTable(dTable);
+		JSplitPane treePropSplitPane = new JSplitPane(
+				JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, new JScrollPane(
+						new JTable(dTable)));
+		treePropSplitPane.setDividerLocation(600);
+
 		JTabbedPane treeJsonTab = new JTabbedPane();
-		treeJsonTab.addTab("Tree", treeScrollPane);
+		treeJsonTab.addTab("View", treePropSplitPane);
 		treeJsonTab.addTab("Json", jsonTextScrollPane);
-		
+
 		jTabbedPane.addTab(name, null, (Component) treeJsonTab, filePath);
 		jTabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		jTabbedPane.setSelectedComponent((Component) treeJsonTab);
 		jPanelMain.add(jTabbedPane, BorderLayout.CENTER);
 	}
+
 	private void initTabComponent() {
-		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(), new ButtonTabComponent(this));
+		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(),
+				new ButtonTabComponent(this));
 
 	}
 }

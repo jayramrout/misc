@@ -3,6 +3,7 @@ package com.jsonviewer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,14 +25,16 @@ import org.json.JSONObject;
 public class TreeView extends javax.swing.JPanel {
 
 	/** Creates new form TreeView */
-
+	DynamicTable dTable = null;
 	public TreeView() {
 		init();
 	}
 
 	private void init() {
 	}
-
+	public void setDynamicTable(DynamicTable dTable) {
+		this.dTable = dTable;
+	}
 	public JTree getTreeView(InputStream is, String contents) {
 		try {
 			if (contents == null) {
@@ -93,6 +96,7 @@ public class TreeView extends javax.swing.JPanel {
 		jsonTree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
+				dTable.clear();
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) jsonTree
 						.getLastSelectedPathComponent();
 
@@ -101,11 +105,20 @@ public class TreeView extends javax.swing.JPanel {
 
 				Object nodeInfo = node.getUserObject();
 				if (node.isLeaf()) {
-					System.out.println(nodeInfo);
+					String value = nodeInfo.toString();
+//					value.substring(0,value.indexOf(":"));
+//					StringTokenizer token = new StringTokenizer(nodeInfo.toString(),":");
+					dTable.addRow(new String[]{value.substring(0,value.indexOf(":")), value.substring(value.indexOf(":")+1)});
 				} else {
 					int childCount = jsonTree.getModel().getChildCount(node);
 					for(int i = 0; i < childCount ; i++) {
-						//System.out.println(" model.getClass() : "+jsonTree.getModel().getChild(node, i));
+						String value = jsonTree.getModel().getChild(node, i).toString();
+						if(value.contains(":")) {
+//							StringTokenizer token = new StringTokenizer(value,":");
+							dTable.addRow(new String[]{value.substring(0,value.indexOf(":")), value.substring(value.indexOf(":")+1)});
+						}else {
+							dTable.addRow(new String[]{value, ""});
+						}
 					}
 				}
 			}

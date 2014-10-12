@@ -126,7 +126,6 @@ public class JSONViewer extends JFrame implements ActionListener {
 		jPanelLower.setSize(new Dimension(200, 200));
 
 		JPanel searchPanel = new JPanel(new BorderLayout());
-		// searchPanel.setBorder(BorderFactory.createEtchedBorder());
 
 		clearTabs = new JButton("Clear Tabs");
 		clearTabs.addActionListener(this);
@@ -200,13 +199,14 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				final String queryString = jComboBoxQuery.getSelectedItem()
-						.toString().replaceAll("\\s", "");
-
-				if (!treeSet.contains(queryString)) {
-					treeSet.add(queryString);
+				if(jComboBoxQuery.getSelectedItem() != null) {
+					final String queryString = jComboBoxQuery.getSelectedItem()
+							.toString().replaceAll("\\s", "");
+					if (!treeSet.contains(queryString)) {
+						treeSet.add(queryString);
+					}
+					queryJSON(queryString);
 				}
-				queryJSON(queryString);
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);
