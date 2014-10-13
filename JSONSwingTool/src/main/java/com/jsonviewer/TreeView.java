@@ -43,13 +43,11 @@ public class TreeView extends javax.swing.JPanel {
 
 			JSONObject object = null;
 			JSONArray array = null;
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(
-					"ROOT");
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode("ROOT");
 
 			try {
 				object = new JSONObject(contents);
-				HashMap<String, Object> fm = Helper
-						.getMapFromJSONObject(object);
+				HashMap<String, Object> fm = Helper.getMapFromJSONObject(object);
 				Helper.getNodeFromMap(fm, node);
 			} catch (JSONException e) {
 				try {
@@ -58,11 +56,9 @@ public class TreeView extends javax.swing.JPanel {
 					Helper.getNodeFromList(list, node);
 				} catch (JSONException je) {
 					try {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"The Source specified does not contain a valid JSON String",
-										"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this,
+								"The Source specified does not contain a valid JSON String", "Error",
+								JOptionPane.ERROR_MESSAGE);
 						return null;
 						/*
 						 * if(is == null){ JOptionPane.showMessageDialog(this,
@@ -71,11 +67,9 @@ public class TreeView extends javax.swing.JPanel {
 						 */// getTreeView(null,
 							// Helper.decompressContent(contents));
 					} catch (JSONException jje) {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"The Source specified does not contain a valid JSON String",
-										"Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(this,
+								"The Source specified does not contain a valid JSON String", "Error",
+								JOptionPane.ERROR_MESSAGE);
 						return null;
 
 					}
@@ -84,21 +78,17 @@ public class TreeView extends javax.swing.JPanel {
 			jsonTree = new JTree(node);
 			jsonTree.setShowsRootHandles(true);
 		} catch (JSONException ex) {
-			Logger.getLogger(TreeView.class.getName()).log(Level.SEVERE, null,
-					ex);
+			Logger.getLogger(TreeView.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (Exception ex) {
-			Logger.getLogger(TreeView.class.getName()).log(Level.SEVERE, null,
-					ex);
+			Logger.getLogger(TreeView.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		jsonTree.setEditable(Boolean.TRUE);
-		jsonTree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		jsonTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		jsonTree.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				dTable.clear();
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) jsonTree
-						.getLastSelectedPathComponent();
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) jsonTree.getLastSelectedPathComponent();
 
 				if (node == null)
 					return;
@@ -106,17 +96,21 @@ public class TreeView extends javax.swing.JPanel {
 				Object nodeInfo = node.getUserObject();
 				if (node.isLeaf()) {
 					String value = nodeInfo.toString();
-//					value.substring(0,value.indexOf(":"));
-//					StringTokenizer token = new StringTokenizer(nodeInfo.toString(),":");
-					dTable.addRow(new String[]{value.substring(0,value.indexOf(":")), value.substring(value.indexOf(":")+1)});
+					// value.substring(0,value.indexOf(":"));
+					// StringTokenizer token = new
+					// StringTokenizer(nodeInfo.toString(),":");
+					dTable.addRow(new String[]{value.substring(0, value.indexOf(":")),
+							value.substring(value.indexOf(":") + 1)});
 				} else {
 					int childCount = jsonTree.getModel().getChildCount(node);
-					for(int i = 0; i < childCount ; i++) {
+					for (int i = 0; i < childCount; i++) {
 						String value = jsonTree.getModel().getChild(node, i).toString();
-						if(value.contains(":")) {
-//							StringTokenizer token = new StringTokenizer(value,":");
-							dTable.addRow(new String[]{value.substring(0,value.indexOf(":")), value.substring(value.indexOf(":")+1)});
-						}else {
+						if (value.contains(":")) {
+							// StringTokenizer token = new
+							// StringTokenizer(value,":");
+							dTable.addRow(new String[]{value.substring(0, value.indexOf(":")),
+									value.substring(value.indexOf(":") + 1)});
+						} else {
 							dTable.addRow(new String[]{value, ""});
 						}
 					}

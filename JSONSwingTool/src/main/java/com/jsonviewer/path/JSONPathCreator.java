@@ -21,18 +21,20 @@ import com.jsonviewer.JSONViewer;
  *
  */
 public class JSONPathCreator {
-	
-	/*public static void main(String[] args) throws Exception {
-		JSONPathCreator main = new JSONPathCreator();
-		main.startReading();
-	}
 
-	public void startReading() throws IOException {
-//		String jsonContents = JSONPathCreator.getInputStreamContents(getClass().getResourceAsStream("/StoreJSON.txt"));
-		String jsonContents = JSONPathCreator.getInputStreamContents(getClass().getResourceAsStream("/ReadMe2.json"));
-		Set keys = getJSONKeys(jsonContents);
-	}*/
-	
+	/*
+	 * public static void main(String[] args) throws Exception { JSONPathCreator
+	 * main = new JSONPathCreator(); main.startReading(); }
+	 * 
+	 * public void startReading() throws IOException { // String jsonContents =
+	 * JSONPathCreator
+	 * .getInputStreamContents(getClass().getResourceAsStream("/StoreJSON.txt"
+	 * )); String jsonContents =
+	 * JSONPathCreator.getInputStreamContents(getClass(
+	 * ).getResourceAsStream("/ReadMe2.json")); Set keys =
+	 * getJSONKeys(jsonContents); }
+	 */
+
 	public static Set getJSONKeys(String jsonContent) {
 		JSONObject object = null;
 		JSONArray array = null;
@@ -73,19 +75,20 @@ public class JSONPathCreator {
 	 * @return
 	 * @throws JSONException
 	 */
-	public static HashMap<String, Object> getMapFromJSONObject(String jsonPathKey, JSONObject object) throws JSONException {
+	public static HashMap<String, Object> getMapFromJSONObject(String jsonPathKey, JSONObject object)
+			throws JSONException {
 		HashMap<String, Object> retVal = new HashMap<String, Object>();
 		Iterator<String> keys = object.keys();
 		while (keys.hasNext()) {
 			String key = keys.next();
-			
+
 			Object val = object.get(key);
 			if (val instanceof JSONArray) {
-				getListFromJSONArray(jsonPathKey+ "." + key, (JSONArray) val);
+				getListFromJSONArray(jsonPathKey + "." + key, (JSONArray) val);
 			} else if (val instanceof JSONObject) {
-				getMapFromJSONObject(jsonPathKey+ "." + key, (JSONObject) val);
+				getMapFromJSONObject(jsonPathKey + "." + key, (JSONObject) val);
 			} else {
-				JSONViewer.treeSet.add(jsonPathKey+"."+key);
+				JSONViewer.treeSet.add(jsonPathKey + "." + key);
 			}
 		}
 		return retVal;
@@ -99,13 +102,13 @@ public class JSONPathCreator {
 	public static ArrayList<Object> getListFromJSONArray(String jsonPathKey, JSONArray array) throws JSONException {
 		ArrayList<Object> retVal = new ArrayList<Object>();
 		int size = array.length();
-		
+
 		for (int i = 0; i < size; i++) {
 			Object val = array.get(i);
 			if (val instanceof JSONObject) {
-				getMapFromJSONObject(jsonPathKey+"["+i+"]", (JSONObject) val);
+				getMapFromJSONObject(jsonPathKey + "[" + i + "]", (JSONObject) val);
 			} else if (val instanceof JSONArray) {
-				getListFromJSONArray(jsonPathKey+"["+i+"]", (JSONArray) val);
+				getListFromJSONArray(jsonPathKey + "[" + i + "]", (JSONArray) val);
 			} else {
 				JSONViewer.treeSet.add(jsonPathKey);
 			}

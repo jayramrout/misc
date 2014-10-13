@@ -38,14 +38,14 @@ import org.json.JSONObject;
  *
  */
 public class Helper {
-	
+
 	static List fileList = new ArrayList();
-	static String[] columnNames = { "Property", "Value" };
-	static Object[][] data = { { "", "" } };
-//	private static JTable table = new JTable(data, columnNames);
+	static String[] columnNames = {"Property", "Value"};
+	static Object[][] data = {{"", ""}};
+	// private static JTable table = new JTable(data, columnNames);
 	private static DynamicTable table = new DynamicTable();
-	
-	public static DynamicTable getCommonTable(){
+
+	public static DynamicTable getCommonTable() {
 		return table;
 	}
 	public static String getInputStreamContents(InputStream is) throws IOException {
@@ -68,7 +68,7 @@ public class Helper {
 			String key = ite.next();
 			Object value = map.get(key);
 			if (value instanceof ArrayList) {
-				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", "")+" [ ]");
+				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", "") + " [ ]");
 				getNodeFromList((ArrayList) value, keyNode);
 				node.add(keyNode);
 			} else if (value instanceof HashMap) {
@@ -76,9 +76,11 @@ public class Helper {
 				getNodeFromMap((HashMap) value, keyNode);
 				node.add(keyNode);
 			} else {
-				DefaultMutableTreeNode keyValueNode = new DefaultMutableTreeNode(key.replace("\"", "")+" : " + ((value instanceof String) ? "\""+value.toString().replace("\"", "")+"\"" : value));
-//				DefaultMutableTreeNode valueNode = new DefaultMutableTreeNode(value.toString().replace("\"", ""));
-//				keyNode.add(valueNode);
+				DefaultMutableTreeNode keyValueNode = new DefaultMutableTreeNode(key.replace("\"", "") + " : "
+						+ ((value instanceof String) ? "\"" + value.toString().replace("\"", "") + "\"" : value));
+				// DefaultMutableTreeNode valueNode = new
+				// DefaultMutableTreeNode(value.toString().replace("\"", ""));
+				// keyNode.add(valueNode);
 				node.add(keyValueNode);
 			}
 		}
@@ -178,9 +180,8 @@ public class Helper {
 	/**
 	 * 
 	 * @param test
-	 * @return
-	 * It checks if a JSON File is Valid.
-	 * As Of now I am not using it anywhere.Please remove this comment if its used in future.
+	 * @return It checks if a JSON File is Valid. As Of now I am not using it
+	 *         anywhere.Please remove this comment if its used in future.
 	 */
 	public static boolean isJSONValid(File file) {
 		String contents = null;
@@ -189,19 +190,20 @@ public class Helper {
 			contents = Helper.getInputStreamContents(is);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 		}
 		try {
 			new JSONObject(contents);
 			return true;
 		} catch (JSONException ex) {
 			try {
-                new JSONArray(contents);
-                return true;
-            } catch(JSONException je) {
-            	JOptionPane.showMessageDialog(null, "The Source specified does not contain a valid JSON String", "Error", JOptionPane.ERROR_MESSAGE);
-    			return false;
-            }
+				new JSONArray(contents);
+				return true;
+			} catch (JSONException je) {
+				JOptionPane.showMessageDialog(null, "The Source specified does not contain a valid JSON String",
+						"Error", JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
 		}
 	}
 	/**
@@ -209,7 +211,7 @@ public class Helper {
 	 * @param tabbedPaneController
 	 * @return
 	 */
-	public String getJSONString(String fileName){
+	public String getJSONString(String fileName) {
 		StringBuilder jsonBuilder = new StringBuilder();
 
 		Scanner scanner = null;
@@ -219,8 +221,7 @@ public class Helper {
 		try {
 			if (fileName == JSONConstants.DEFAULT) {
 				file = new File(fileName);
-				br = new BufferedReader(new InputStreamReader(getClass()
-						.getResourceAsStream("/StoreJSON.txt")));
+				br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/StoreJSON.txt")));
 			} else {
 				file = new File(fileName);
 				in = new FileReader(file);
@@ -252,7 +253,7 @@ public class Helper {
 			}
 		}
 		return jsonBuilder.toString();
-	} 
+	}
 	/**
 	 * 
 	 * @param fileNames
@@ -260,26 +261,26 @@ public class Helper {
 	 * @param fileName
 	 * @return
 	 */
-	public static List<String> getFileNames(List<String> fileNames, Path dir , String fileName){
-	    try {
-	        DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
-	        for (Path path : stream) {
-	            if(path.toFile().isDirectory()){
-	            	getFileNames(fileNames, path, fileName);
-	            }else {
-	            	if(path.getFileName().toString().contains(fileName)){
-	            		fileNames.add(path.toAbsolutePath().toString());
-//	            		System.out.println(path.getFileName());
-	            	}
-	            }
-	        }
-	        stream.close();
-	    }catch(IOException e){
-	        e.printStackTrace();
-	    }
-	    return fileNames;
+	public static List<String> getFileNames(List<String> fileNames, Path dir, String fileName) {
+		try {
+			DirectoryStream<Path> stream = Files.newDirectoryStream(dir);
+			for (Path path : stream) {
+				if (path.toFile().isDirectory()) {
+					getFileNames(fileNames, path, fileName);
+				} else {
+					if (path.getFileName().toString().contains(fileName)) {
+						fileNames.add(path.toAbsolutePath().toString());
+						// System.out.println(path.getFileName());
+					}
+				}
+			}
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return fileNames;
 	}
-	
+
 	/**
 	 * 
 	 * @param zippedBase64Str
@@ -287,10 +288,8 @@ public class Helper {
 	 * @throws IOException
 	 * @throws DataFormatException
 	 */
-	public static String decompress(String filePath) throws IOException,
-			DataFormatException {
-		String result = null;
-		;
+	public static String decompress(String filePath) throws IOException, DataFormatException {
+		String result = null;;
 		byte[] bytes = Base64.base64ToByteArray(readFileAsString(filePath));
 		GZIPInputStream zi = null;
 		try {
@@ -311,8 +310,7 @@ public class Helper {
 	 * @throws IOException
 	 * @throws DataFormatException
 	 */
-	public static String decompressContent(String content) throws IOException,
-			DataFormatException {
+	public static String decompressContent(String content) throws IOException, DataFormatException {
 		String result = null;
 		content.length();
 		System.out.println(content.trim().length());
@@ -324,12 +322,12 @@ public class Helper {
 		} finally {
 			IOUtils.closeQuietly(zi);
 		}
-		//System.out.println("decompressed " + result);
+		// System.out.println("decompressed " + result);
 
 		return result;
 
 	}
-	
+
 	/**
 	 * 
 	 * @param srcTxt
@@ -354,16 +352,15 @@ public class Helper {
 		}
 		return comString;
 
-	}	
+	}
 	/**
 	 * 
 	 * @param filePath
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	
-	private static String readFileAsString(String filePath)
-			throws java.io.IOException {
+
+	private static String readFileAsString(String filePath) throws java.io.IOException {
 		StringBuffer fileData = new StringBuffer(1000);
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		char[] buf = new char[1024];

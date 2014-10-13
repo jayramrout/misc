@@ -79,8 +79,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 	private JComboBox jComboBoxQuery;
 	private JButton queryButton;
 	public static Set<String> treeSet = new TreeSet<String>();
-	static Integer ignoreArray[] = { VK_A, VK_ESCAPE, VK_UP, VK_DOWN, VK_ENTER,
-			VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT, VK_RIGHT, VK_END };
+	static Integer ignoreArray[] = {VK_A, VK_ESCAPE, VK_UP, VK_DOWN, VK_ENTER, VK_HOME, VK_SHIFT, VK_CONTROL, VK_LEFT,
+			VK_RIGHT, VK_END};
 	public static List<Integer> ignoreKeyCodes = new ArrayList<Integer>();
 	private String rootFolderPath = null;
 	static {
@@ -94,20 +94,16 @@ public class JSONViewer extends JFrame implements ActionListener {
 	}
 
 	public void rootFolderToSearch() {
-		JLabel jsonRootFolderLabel = new JLabel(
-				"Enter Root Folder for Searching the json File:");
+		JLabel jsonRootFolderLabel = new JLabel("Enter Root Folder for Searching the json File:");
 		JTextField jsonRootFolderField = new JTextField(10);
-		Object[] array = { jsonRootFolderLabel, jsonRootFolderField };
-		int res = JOptionPane.showConfirmDialog(null, array, "",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		Object[] array = {jsonRootFolderLabel, jsonRootFolderField};
+		int res = JOptionPane.showConfirmDialog(null, array, "", JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE);
 		if (res == JOptionPane.OK_OPTION) {
 			rootFolderPath = jsonRootFolderField.getText();
 			if (!new File(rootFolderPath).isDirectory()) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								new String[] { "Root Folder is not correct Add again" },
-								"Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, new String[]{"Root Folder is not correct Add again"}, "Error",
+						JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 		}
@@ -132,44 +128,39 @@ public class JSONViewer extends JFrame implements ActionListener {
 		jComboBoxQuery = new JComboBox();
 
 		jComboBoxQuery.setEditable(true);
-		jComboBoxQuery.getEditor().getEditorComponent()
-				.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyReleased(KeyEvent e) {
-						// System.out.println(" Key Char ="+e.getKeyChar() +
-						// " Key Code = "+e.getKeyCode());
-						int tempCaretPosition = 0;
-						ComboBoxEditor editor = jComboBoxQuery.getEditor();
-						JTextField textField = (JTextField) editor
-								.getEditorComponent();
-						tempCaretPosition = textField.getCaretPosition();
-						if (ignoreKeyCodes.contains(e.getKeyCode())) {
-							// DO NOTHING
-						} else {
-							String a = jComboBoxQuery.getEditor().getItem()
-									.toString();
-							jComboBoxQuery.removeAllItems();
-							int counter = 0;
-							jComboBoxQuery.addItem("");
-							for (String keys : treeSet) {
-								if (keys.toLowerCase()
-										.contains(a.toLowerCase())) {
-									jComboBoxQuery.addItem(keys);
-									counter++;
-								}
-							}
-							jComboBoxQuery.getEditor().setItem(new String(a));
-							((JTextComponent) e.getSource()).setCaretPosition(a
-									.length());
-
-							jComboBoxQuery.hidePopup();
-							if (counter != 0) {
-								jComboBoxQuery.showPopup();
-							}
-							textField.setCaretPosition(tempCaretPosition);
+		jComboBoxQuery.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// System.out.println(" Key Char ="+e.getKeyChar() +
+				// " Key Code = "+e.getKeyCode());
+				int tempCaretPosition = 0;
+				ComboBoxEditor editor = jComboBoxQuery.getEditor();
+				JTextField textField = (JTextField) editor.getEditorComponent();
+				tempCaretPosition = textField.getCaretPosition();
+				if (ignoreKeyCodes.contains(e.getKeyCode())) {
+					// DO NOTHING
+				} else {
+					String a = jComboBoxQuery.getEditor().getItem().toString();
+					jComboBoxQuery.removeAllItems();
+					int counter = 0;
+					jComboBoxQuery.addItem("");
+					for (String keys : treeSet) {
+						if (keys.toLowerCase().contains(a.toLowerCase())) {
+							jComboBoxQuery.addItem(keys);
+							counter++;
 						}
 					}
-				});
+					jComboBoxQuery.getEditor().setItem(new String(a));
+					((JTextComponent) e.getSource()).setCaretPosition(a.length());
+
+					jComboBoxQuery.hidePopup();
+					if (counter != 0) {
+						jComboBoxQuery.showPopup();
+					}
+					textField.setCaretPosition(tempCaretPosition);
+				}
+			}
+		});
 		Font font = new Font("Courier", Font.PLAIN, 13);
 		jComboBoxQuery.setFont(font);
 		jComboBoxQuery.setForeground(Color.BLUE);
@@ -181,14 +172,11 @@ public class JSONViewer extends JFrame implements ActionListener {
 		searchPanel.add(queryButton, BorderLayout.EAST);
 
 		final RSyntaxTextArea consoleTextArea = new RSyntaxTextArea(20, 60);
-		consoleTextArea
-				.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+		consoleTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
 		consoleTextArea.setCodeFoldingEnabled(true);
-		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(
-				consoleTextArea);
+		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(consoleTextArea);
 
-		PrintStream printStream = new PrintStream(new CustomOutputStream(
-				consoleTextArea));
+		PrintStream printStream = new PrintStream(new CustomOutputStream(consoleTextArea));
 
 		System.setOut(printStream);
 		System.setErr(printStream);
@@ -199,9 +187,8 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		queryButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(jComboBoxQuery.getSelectedItem() != null) {
-					final String queryString = jComboBoxQuery.getSelectedItem()
-							.toString().replaceAll("\\s", "");
+				if (jComboBoxQuery.getSelectedItem() != null) {
+					final String queryString = jComboBoxQuery.getSelectedItem().toString().replaceAll("\\s", "");
 					if (!treeSet.contains(queryString)) {
 						treeSet.add(queryString);
 					}
@@ -210,13 +197,11 @@ public class JSONViewer extends JFrame implements ActionListener {
 			}
 		});
 		getRootPane().setDefaultButton(queryButton);
-		JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				searchPanel, outputPanel);
+		JSplitPane lowerSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, searchPanel, outputPanel);
 		lowerSplitPane.setDividerSize(0);
 		jPanelLower.add(lowerSplitPane);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-				jPanelMain, jPanelLower);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jPanelMain, jPanelLower);
 		splitPane.setDividerSize(2);
 		splitPane.setDividerLocation(500);
 		add(splitPane);
@@ -227,21 +212,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		pack();
 		setVisible(true);
 
-		String hostname = null;
-		try {
-			InetAddress addr;
-			addr = InetAddress.getLocalHost();
-			hostname = addr.getHostName();
-			if (hostname != null && hostname.length() >= 1) {
-				hostname = hostname.substring(5, hostname.length() - 1);
-				hostname += " to ";
-			}
-		} catch (Exception exp) {
-			exp.printStackTrace();
-			hostname = "to ";
-		}
-
-		setTitle("Welcome " + hostname + " JSON Query");
+		setTitle("Welcome to JSON Query");
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -270,15 +241,9 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"Copyrights \u00a9 2014 By Jayram Rout. \n Email : jayram.rout@7chapters.info",
-								"About Json Tool",
-								JOptionPane.INFORMATION_MESSAGE);
-				/*
-				 * AboutDialog ad = new AboutDialog(); ad.setVisible(true);
-				 */
+				JOptionPane.showMessageDialog(null,
+						"Copyrights \u00a9 2014 By Jayram Rout. \n Email : jayram.rout@7chapters.info",
+						"About Json Tool", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 
@@ -294,13 +259,9 @@ public class JSONViewer extends JFrame implements ActionListener {
 		JMenu optionMenu = new JMenu("Option");
 		optionMenu.setMnemonic(KeyEvent.VK_O);
 		JMenuItem openResource = new JMenuItem("Open Resource", KeyEvent.VK_O);
-		openResource.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,
-				KeyEvent.CTRL_MASK + KeyEvent.SHIFT_MASK));
+		openResource.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK + KeyEvent.SHIFT_MASK));
 
 		optionMenu.add(openResource);
-		// menuBar.add(optionMenu);
-		// private final DefaultListModel philosophers;
-		// private final JList list;
 
 		openResource.addActionListener(new ActionListener() {
 			@Override
@@ -312,37 +273,34 @@ public class JSONViewer extends JFrame implements ActionListener {
 				JPanel searchPanelResource = new JPanel(new BorderLayout());
 				final JTextArea resourceQuery = new JTextArea();
 				searchPanelResource.add(resourceQuery, BorderLayout.CENTER);
-				searchPanelResource.setBorder(BorderFactory
-						.createLineBorder(Color.black));
+				searchPanelResource.setBorder(BorderFactory.createLineBorder(Color.black));
 				resourceQuery.addKeyListener(new KeyListener() {
 
 					@Override
 					public void keyTyped(KeyEvent paramKeyEvent) {
 						filesModel.removeAllElements();
 
-						Path dir = FileSystems.getDefault().getPath(
-								rootFolderPath);
+						Path dir = FileSystems.getDefault().getPath(rootFolderPath);
 						List<String> fileList = new ArrayList<String>();
-						List<String> fileNames = Helper.getFileNames(fileList,
-								dir, resourceQuery.getText());
+						List<String> fileNames = Helper.getFileNames(fileList, dir, resourceQuery.getText());
 						for (String filePath : fileNames) {
 							filesModel.addElement(filePath);
 						}
 					}
 					@Override
-					public void keyReleased(KeyEvent paramKeyEvent) {}
+					public void keyReleased(KeyEvent paramKeyEvent) {
+					}
 					@Override
-					public void keyPressed(KeyEvent paramKeyEvent) {}
+					public void keyPressed(KeyEvent paramKeyEvent) {
+					}
 				});
 
 				JPanel jPanelLower = new JPanel(new BorderLayout());
 				jPanelLower.setSize(new Dimension(200, 200));
 				jPanelLower.add(jList, BorderLayout.CENTER);
-				jPanelLower.setBorder(BorderFactory
-						.createLineBorder(Color.black));
+				jPanelLower.setBorder(BorderFactory.createLineBorder(Color.black));
 
-				final JDialog dlg = new JDialog(JSONViewer.this,
-						"Resource Dialog", true);
+				final JDialog dlg = new JDialog(JSONViewer.this, "Resource Dialog", true);
 				dlg.add(BorderLayout.NORTH, searchPanelResource);
 				dlg.add(BorderLayout.CENTER, jPanelLower);
 
@@ -351,17 +309,11 @@ public class JSONViewer extends JFrame implements ActionListener {
 				dlg.setLocationRelativeTo(JSONViewer.this);
 				dlg.setVisible(true);
 
-				/*
-				 * final Thread t1 = new Thread(new Runnable() { public void
-				 * run() { dlg.setVisible(true); } }); t1.start();
-				 */
-
 			}
 		});
 		openItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				FileDialog fd = new FileDialog(JSONViewer.this, "Select File",
-						FileDialog.LOAD);
+				FileDialog fd = new FileDialog(JSONViewer.this, "Select File", FileDialog.LOAD);
 				fd.setMultipleMode(true);
 				fd.show();
 				String filePath = null;
@@ -376,12 +328,6 @@ public class JSONViewer extends JFrame implements ActionListener {
 						}
 					}
 				}
-				/*
-				 * if (fd.getFile() != null) { filePath = fd.getDirectory() +
-				 * fd.getFile(); setTitle(fd.getFile()); try {
-				 * tabbedPaneController.addTab(filePath); } catch (Exception e)
-				 * { e.printStackTrace(); } }
-				 */
 			}
 		});
 
@@ -413,23 +359,19 @@ public class JSONViewer extends JFrame implements ActionListener {
 	 */
 	private void queryJSON(String nodeStr) {
 		int selectedIndex = tabbedPaneController.jTabbedPane.getSelectedIndex();
-		String fileName = tabbedPaneController.jTabbedPane
-				.getToolTipTextAt(selectedIndex);
+		String fileName = tabbedPaneController.jTabbedPane.getToolTipTextAt(selectedIndex);
 		String[] queryString = nodeStr.split(",");
-		System.out.println("== "
-				+ fileName.substring(fileName.lastIndexOf("\\") + 1) + " ==");
+		System.out.println("== " + fileName.substring(fileName.lastIndexOf("\\") + 1) + " ==");
 		for (String query : queryString) {
 			if (query != null && query.length() > 0) {
 				System.out.println("\t\"" + query + "\":");
-				Object object = readJsonPath(
-						new Helper().getJSONString(fileName), query);
+				Object object = readJsonPath(new Helper().getJSONString(fileName), query);
 				if (object != null) {
 					if (object instanceof List) {
 						List<Object> objList = (List<Object>) object;
 						int idx = 0;
 						for (Object obj : objList) {
-							System.out
-									.println("\t\t" + "[" + idx++ + "]" + obj);
+							System.out.println("\t\t" + "[" + idx++ + "]" + obj);
 						}
 					} else {
 						System.out.println("\t\t" + object);
@@ -453,7 +395,6 @@ public class JSONViewer extends JFrame implements ActionListener {
 
 		Object obj = null;
 		try {
-			// log.debug(json);
 			obj = JsonPath.read(json, query);
 		} catch (PathNotFoundException pnfe) {
 			System.err.println("\t\tPath Not Found : " + query);

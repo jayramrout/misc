@@ -53,12 +53,6 @@ class TabbedPaneController {
 		this.jPanelMain = jPanelMain;
 		fileTransferHandler = new FileTransferHandler(this);
 		fileSeparator = System.getProperty("file.separator");
-		// The split method in the String class uses
-		// regular expressions to define the text used for
-		// the split. The forward slash "\" is a special
-		// character and must be escaped. Some look and feels,
-		// such as Microsoft Windows, use the forward slash to
-		// delimit the path.
 		if ("\\".equals(fileSeparator)) {
 			fileSeparator = "\\\\";
 		}
@@ -66,24 +60,14 @@ class TabbedPaneController {
 			public void stateChanged(ChangeEvent e) {
 				int index = jTabbedPane.getSelectedIndex();
 				if (index != -1) {
-					JTabbedPane jSplitPane = (JTabbedPane) jTabbedPane
-							.getComponentAt(index);
-					// JSplitPane jSplitPane =
-					// (JSplitPane)jTabbedPane.getComponentAt(index);
-					RTextScrollPane textScrollPane = (RTextScrollPane) jSplitPane
-							.getComponent(1);
-					JViewport viewPort = (JViewport) textScrollPane
-							.getComponent(0);
-					RSyntaxTextArea textArea = (RSyntaxTextArea) viewPort
-							.getComponent(0);
-					// String jsonContent = new
-					// Helper().getJSONString(textArea.getText());
-					// JSONPathCreator.getJSONKeys(jsonContent);
+					JTabbedPane jSplitPane = (JTabbedPane) jTabbedPane.getComponentAt(index);
+					RTextScrollPane textScrollPane = (RTextScrollPane) jSplitPane.getComponent(1);
+					JViewport viewPort = (JViewport) textScrollPane.getComponent(0);
+					RSyntaxTextArea textArea = (RSyntaxTextArea) viewPort.getComponent(0);
 					JSONPathCreator.getJSONKeys(textArea.getText());
 
 					String fileName = jTabbedPane.getToolTipTextAt(index);
-					JFrame rootFrame = (JFrame) SwingUtilities
-							.getRoot(jTabbedPane);
+					JFrame rootFrame = (JFrame) SwingUtilities.getRoot(jTabbedPane);
 					if (rootFrame != null && fileName != null)
 						rootFrame.setTitle(fileName);
 				}
@@ -148,8 +132,7 @@ class TabbedPaneController {
 	 */
 	private void createPanel(String name, String filePath) {
 		if (Helper.fileList.contains(filePath)) {
-			JOptionPane.showMessageDialog(null, "File Already Present",
-					"Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "File Already Present", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		} else {
 			Helper.fileList.add(filePath);
@@ -181,22 +164,17 @@ class TabbedPaneController {
 		// jsonTextArea.setTransferHandler(fileTransferHandler);
 
 		RTextScrollPane jsonTextScrollPane = new RTextScrollPane(jsonTextArea);
-		jsonTextScrollPane.setBorder(BorderFactory
-				.createEmptyBorder(0, 0, 0, 0));
+		jsonTextScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			if (name.equals("Store")) {
-				jsonTextArea.read(new InputStreamReader(getClass()
-						.getResourceAsStream("/ReadMe.txt")), null);
+				jsonTextArea.read(new InputStreamReader(getClass().getResourceAsStream("/ReadMe.txt")), null);
 			} else {
-				Object json = mapper.readValue(
-						new Helper().getJSONString(filePath), Object.class);
+				Object json = mapper.readValue(new Helper().getJSONString(filePath), Object.class);
 				// System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-				jsonTextArea.read(
-						new StringReader(mapper
-								.writerWithDefaultPrettyPrinter()
-								.writeValueAsString(json)), null);
+				jsonTextArea.read(new StringReader(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json)),
+						null);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -205,9 +183,8 @@ class TabbedPaneController {
 		// JTable table = new JTable();
 		DynamicTable dTable = new DynamicTable();
 		tv.setDynamicTable(dTable);
-		JSplitPane treePropSplitPane = new JSplitPane(
-				JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, new JScrollPane(
-						new JTable(dTable)));
+		JSplitPane treePropSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeScrollPane, new JScrollPane(
+				new JTable(dTable)));
 		treePropSplitPane.setDividerLocation(600);
 
 		JTabbedPane treeJsonTab = new JTabbedPane();
@@ -221,8 +198,7 @@ class TabbedPaneController {
 	}
 
 	private void initTabComponent() {
-		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(),
-				new ButtonTabComponent(this));
+		jTabbedPane.setTabComponentAt(jTabbedPane.getSelectedIndex(), new ButtonTabComponent(this));
 
 	}
 }

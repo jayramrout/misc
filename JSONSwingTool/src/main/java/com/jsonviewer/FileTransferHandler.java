@@ -35,8 +35,7 @@ class FileTransferHandler extends TransferHandler {
 		try {
 			if (hasFileFlavor(t.getTransferDataFlavors())) {
 				String str = null;
-				java.util.List files = (java.util.List) t
-						.getTransferData(fileFlavor);
+				java.util.List files = (java.util.List) t.getTransferData(fileFlavor);
 				for (int i = 0; i < files.size(); i++) {
 					File file = (File) files.get(i);
 					tpc.addTab(file.toString());
