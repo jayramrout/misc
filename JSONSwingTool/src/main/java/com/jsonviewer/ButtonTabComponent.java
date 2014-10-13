@@ -59,7 +59,7 @@ public class ButtonTabComponent extends JPanel {
 
 	private class TabButton extends JButton implements ActionListener {
 		public TabButton() {
-			int size = 17;
+			int size = 10;
 			setPreferredSize(new Dimension(size, size));
 			setToolTipText("close this tab");
 			setUI(new BasicButtonUI());
