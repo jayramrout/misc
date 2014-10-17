@@ -3,7 +3,6 @@ package com.jsonviewer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,22 +95,22 @@ public class TreeView extends javax.swing.JPanel {
 				Object nodeInfo = node.getUserObject();
 				if (node.isLeaf()) {
 					String value = nodeInfo.toString();
-					// value.substring(0,value.indexOf(":"));
-					// StringTokenizer token = new
-					// StringTokenizer(nodeInfo.toString(),":");
-					dTable.addRow(new String[]{value.substring(0, value.indexOf(":")),
-							value.substring(value.indexOf(":") + 1)});
+					if(value.contains(":")) {
+						dTable.addRow(new String[]{value.substring(0, value.indexOf(":")),
+								value.substring(value.indexOf(":") + 1)});	
+					}else {
+						dTable.addRow(new String[]{value,"empty"});
+					}
+					
 				} else {
 					int childCount = jsonTree.getModel().getChildCount(node);
 					for (int i = 0; i < childCount; i++) {
 						String value = jsonTree.getModel().getChild(node, i).toString();
 						if (value.contains(":")) {
-							// StringTokenizer token = new
-							// StringTokenizer(value,":");
 							dTable.addRow(new String[]{value.substring(0, value.indexOf(":")),
 									value.substring(value.indexOf(":") + 1)});
 						} else {
-							dTable.addRow(new String[]{value, ""});
+							dTable.addRow(new String[]{value, "java.lang.Object"});
 						}
 					}
 				}

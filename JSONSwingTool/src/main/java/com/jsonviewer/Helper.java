@@ -68,8 +68,9 @@ public class Helper {
 			String key = ite.next();
 			Object value = map.get(key);
 			if (value instanceof ArrayList) {
-				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", "") + " [ ]");
-				getNodeFromList((ArrayList) value, keyNode);
+				List listObj = ((ArrayList) value);
+				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", "") + " ["+listObj.size()+"]");
+				getNodeFromList(listObj, keyNode);
 				node.add(keyNode);
 			} else if (value instanceof HashMap) {
 				DefaultMutableTreeNode keyNode = new DefaultMutableTreeNode(key.replace("\"", ""));
@@ -91,7 +92,7 @@ public class Helper {
 	 * @param list
 	 * @param node
 	 */
-	public static void getNodeFromList(ArrayList list, DefaultMutableTreeNode node) {
+	public static void getNodeFromList(List list, DefaultMutableTreeNode node) {
 		ListIterator ite = list.listIterator();
 		int index = 0;
 		DefaultMutableTreeNode arrayIndexNode;
