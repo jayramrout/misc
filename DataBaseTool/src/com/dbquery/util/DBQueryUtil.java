@@ -1,9 +1,12 @@
 package com.dbquery.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,15 +26,17 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 
+import com.dbquery.components.DBQueryComponent;
 import com.dbquery.components.Environment;
+import com.dbquery.constants.DBContants;
 
 /**
  * @author jrout
  *
  */
-public class DBQueryUtil {
+public class DBQueryUtil { 
 	/**
-	 * 
+	 * *
 	 * @param environment
 	 * @return
 	 */
@@ -164,9 +169,7 @@ public class DBQueryUtil {
 	        String username = userNameField.getText();
 	        char[] password = passField.getPassword();
 	        String pwd = new String(password);
-	        if ((username != null) && (!"".equals(username.trim())) && (pwd != null) && (!"".equals(pwd.trim())) && (
-	          (username.toLowerCase().startsWith("hac")) || (username.toLowerCase().startsWith("dac")) || (username.toLowerCase().startsWith("itdb"))))
-	        {
+	        if ((username != null) && (!"".equals(username.trim())) && (pwd != null) && (!"".equals(pwd.trim()))) {
 	          prop.setProperty("dac_uname", username.trim());
 	          prop.setProperty("dac_password", pwd);
 	          if (isUserNamePasswordCorrect(prop))
@@ -183,5 +186,72 @@ public class DBQueryUtil {
 	      JOptionPane.showMessageDialog(null, new String[] { "Failed to Enter DAC UserName Password . Try again Later" }, "Error", JOptionPane.ERROR_MESSAGE);
 	      System.exit(0);
 	    }
+	}
+	
+	/**
+	 * 
+	 * @param prop
+	 */
+	public static void authenticateUserAndLoadProperties(Properties prop) {
+		FileWriter fw = null;
+		InputStream inputStream = null;
+		FileInputStream fis = null;
+		String userDir = System.getProperty("user.dir");
+		String filePathOne = userDir + DBContants.CONFIG_FILE_NAME;
+		String currentFilePathInUse = "";
+		try {
+			File fileOne = new File(filePathOne);
+
+			if (fileOne.exists()) {
+				fis = new FileInputStream(fileOne);
+				currentFilePathInUse = fileOne.getAbsolutePath();
+				prop.load(fis);
+				if (!DBQueryUtil.isUserNamePasswordCorrect(prop)) {
+					DBQueryUtil.showUserNamePwdOption(prop);
+					prop.store(new FileOutputStream(currentFilePathInUse), "jdbc:db2://<IPADDRESS>:<PORT>/DSNA:currentSchema=<SchemaName>;");
+				}
+				
+				inputStream = DBQueryComponent.class.getClassLoader().getResourceAsStream("db2ErrorCode.properties");
+				prop.load(inputStream);
+
+			}else {
+				inputStream = DBQueryComponent.class.getClassLoader().getResourceAsStream("config.properties");
+				fw = new FileWriter(fileOne);
+				int c = inputStream.read();
+				while (c != -1) {
+					fw.write(c);
+					c = inputStream.read();
+				}
+				fw.flush();
+				JOptionPane.showMessageDialog(null, new String[]{"Edit config.properties file under the current location and then run the application again"},
+						"Result", JOptionPane.WARNING_MESSAGE);
+				System.exit(0);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+				if (fw != null)
+					fw.close();
+			} catch (IOException ioe) {
+			}
+		}
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public static String getInitialMessage(){
+		return "This Tool Support : SELECT UPDATE DELETE DESCRIBE : Operations\n"
+				+ "Choose the environment(default is Integ) , disable/enable QueryName Popup(This is used to give a name to the query you execute)\n"
+				+ "Opens a saved file to load in the editor\n"
+				+ "Tips:\n"
+				+ "\tSelect the SQL and press Alt+R or F5 or the GREEN button on the top left to execute the Query.\n"
+				+ "\tTo Save the table in excel , Right click and choose Export To Excel\n"
+				+ "\tYou can add the table in the CUSTOM schema by adding an entry in the config.properties . Add table name entry for custom_tables separated by comma.\n"
+				+ "\tTriple Click on a cell to see the value in a popup Editor\n";
 	}
 }

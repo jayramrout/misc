@@ -18,13 +18,16 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.dbquery.components.Environment;
+import com.dbquery.constants.DBContants;
 import com.dbquery.domain.Column;
 import com.dbquery.domain.DataBase;
 import com.dbquery.domain.Schema;
 import com.dbquery.domain.Table;
-import com.ibm.db2.jcc.DB2DataSource;
 
 /**
  * @author Jayram Rout
@@ -99,10 +102,16 @@ public class ResultModel {
             ds.setDriverType(4);*/
             
 //			conn = ds.getConnection();
-			conn =		DriverManager.getConnection(prop.getProperty("dburl_" + environment).trim(), prop.getProperty("dac_uname").trim(),
-					prop.getProperty("dac_password").trim());
+			String uname =null , password = null;
 			
-			
+			if(Environment.Integ.getValue().equals(environment)) {
+				uname = prop.getProperty(environment+"_uname").trim();
+				password = prop.getProperty(environment+"_password").trim();
+			}else {
+				uname = prop.getProperty("dac_uname").trim();
+				password = prop.getProperty("dac_password").trim();
+			}
+			conn = DriverManager.getConnection(prop.getProperty("dburl_" + environment).trim(), uname,password);
             
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 			long endTimeToGetConnection = System.currentTimeMillis();
@@ -149,7 +158,7 @@ public class ResultModel {
 							for (int i = 1; i <= cc; i++) {
 								if (rset != null && rset.getObject(i) != null) {
 									
-									String dataValue = String.valueOf(rset.getObject(i)).trim();
+									String dataValue = String.valueOf(rset.getObject(i));
 									if (rset.getObject(i) instanceof Clob) {
 										InputStream in = rset.getAsciiStream(i);
 										StringWriter w = new StringWriter();
@@ -230,38 +239,37 @@ public class ResultModel {
 	 * @param environment
 	 * @param prop
 	 */
-	public void generateJSON() {
+	public static DataBase generateSchemaObject(String query) {
 
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
 		Connection conn = null;
 		BufferedReader br = null;
 		long startTime;
-		ObjectMapper mapper = new ObjectMapper();
+		DataBase dataBase = null;
 		try {
 
-			File file = new File(System.getProperty("user.dir") + "/resources/Test.json");
+			File file = new File(System.getProperty("user.dir") + DBContants.SCHEMA_FILE_NAME);
 
-			String query = "SELECT TBCREATOR as SCHEMA , TBNAME , NAME as COLUMN , COLTYPE , LENGTH from sysibm.syscolumns where tbcreator like '<GiveTableName>%' and (tbname like '<tableName>%' or tbname like '<tableName>%' or tbname like 'TableName%' or tbname like '<TableName>%')";
 			Class.forName("com.ibm.db2.jcc.DB2Driver");
 
 			long startTimeToGetConnection = System.currentTimeMillis();
-			conn = DriverManager.getConnection("", "", "");
+			conn = DriverManager.getConnection("jdbc:db2://<IPADDRESS>:<PORT>/DSNA:currentSchema=<SchemaName>", "<username>", "<password>"); // this needs to be configured.
 			conn.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
 			long endTimeToGetConnection = System.currentTimeMillis();
 			System.out.println("Got Connected to DB in ...." + (endTimeToGetConnection - startTimeToGetConnection) / 1000 + " Seconds");
 
 			startTime = System.currentTimeMillis();
-			System.out.println("Query Executed : " + query);
+//			System.out.println("Query Executed : " + query);
 
 			pstmt = conn.prepareStatement(query);
 			pstmt.setQueryTimeout(60);
 			resultSet = pstmt.executeQuery();
 
 			long endTime = System.currentTimeMillis();
-			System.out.println("Total Time For Executing the Query in Seconds :" + (endTime - startTime) / 1000);
+			System.out.println("Total Time For Executing the Query in Seconds for Generating Schema :" + (endTime - startTime) / 1000);
 
-			DataBase dataBase = new DataBase("DataBase");
+			dataBase = new DataBase("NewHeights");
 			List<Schema> schemaList = new ArrayList<Schema>();
 			List<Column> columnList = null;
 			List<Table> tableList = null;
@@ -272,6 +280,7 @@ public class ResultModel {
 			if (resultSet != null) {
 				while (resultSet.next()) {
 					String schemaName = resultSet.getString("SCHEMA").trim();
+					
 					if (!uniqueStringList.contains(schemaName)) {
 						uniqueStringList.add(schemaName);
 						tableList = new ArrayList<Table>();
@@ -298,15 +307,28 @@ public class ResultModel {
 				}
 				dataBase.setSchemas(schemaList);
 			}
-			mapper.writeValue(file, dataBase);
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				mapper.writeValue(file, dataBase);
+			} catch (JsonGenerationException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return dataBase;
+			
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} finally {
+		} 
+//		catch (IOException ioe) {
+//			ioe.printStackTrace();
+//		} 
+		finally {
 			try {
 				if (br != null)
 					br.close();
@@ -323,11 +345,6 @@ public class ResultModel {
 		}
 
 		System.out.println("ResultModel.generateJSON() Completed");
-
-	}
-
-	public static void main(String[] args) {
-		ResultModel model = new ResultModel();
-//		model.generateJSON();
+		return dataBase;
 	}
 }

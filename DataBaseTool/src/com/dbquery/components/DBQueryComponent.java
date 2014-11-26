@@ -22,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,9 +29,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -90,6 +87,7 @@ import jsyntaxpane.DefaultSyntaxKit;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.oxbow.swingbits.table.filter.TableRowFilterSupport;
 
+import com.dbquery.constants.DBContants;
 import com.dbquery.domain.Column;
 import com.dbquery.domain.DataBase;
 import com.dbquery.domain.IndexWrapper;
@@ -108,121 +106,18 @@ public class DBQueryComponent extends JFrame {
 	private boolean consoleOutputRequired = false;
 	private final JTabbedPane jTabbedPaneResult = new JTabbedPane();
 	public static int index = 0;
-	private String initialMessage = "This Tool Support : SELECT UPDATE DELETE DESCRIBE : Operations\n"
-			+ "Choose the environment(default is Integ) , disable/enable QueryName Popup(This is used to give a name to the query you execute)\n"
-			+ "Opens a saved file to load in the editor\n"
-			+ "Tips:\n"
-			+ "\tSelect the SQL and press Alt+R or F5 or the GREEN button on the top left to execute the Query.\n"
-			+ "\tTo Save the table in excel , Right click and choose Export To Excel\n"
-			+ "\tYou can add the table in the CUSTOM schema by adding an entry in the config.properties . Add table name entry for custom_tables separated by comma.\n"
-			+ "\tTriple Click on a cell to see the value in a popup Editor\n";
+	
 	private String queryText = "";
 	private String queryName = "";
 	final JEditorPane codeEditor;
-	private static String hostname;
 	private String environment = Environment.Integ.getValue();
 	private boolean inputRequired = false;
 	private String filePath;
 	private String mainTitle;
-	static Properties prop = null;
+	static Properties prop = new Properties();
 	private JTree tree;
 	private DefaultMutableTreeNode nhSchema = null;
-	static {
-		FileWriter fw = null;
-		InputStream inputStream = null;
-		boolean openingFirstTime = false;
-		FileInputStream fis = null;
-		String userDir = System.getProperty("user.dir");
-		String filePathOne = userDir + "/config.properties";
-		String filePathTwo = userDir + "/src/config.properties";
-		String currentFilePathInUse = "";
-		try {
-			prop = new Properties();
 
-			File fileOne = new File(filePathOne);
-			File fileTwo = new File(filePathTwo);
-
-			if (fileOne.exists()) {
-				fis = new FileInputStream(fileOne);
-				currentFilePathInUse = fileOne.getAbsolutePath();
-				prop.load(fis);
-			} else if (fileTwo.exists()) {
-				fis = new FileInputStream(fileTwo);
-				currentFilePathInUse = fileTwo.getAbsolutePath();
-				prop.load(fis);
-			} else {
-				openingFirstTime = true;
-				inputStream = DBQueryComponent.class.getClassLoader().getResourceAsStream("config.properties");
-				fw = new FileWriter(fileOne);
-				int c = inputStream.read();
-				while (c != -1) {
-					fw.write(c);
-					c = inputStream.read();
-				}
-				JOptionPane.showMessageDialog(null, new String[]{"Edit config.properties file under the current location and then run the application again"},
-						"Result", JOptionPane.PLAIN_MESSAGE);
-			}
-			if (!DBQueryUtil.isUserNamePasswordCorrect(prop)) {
-				DBQueryUtil.showUserNamePwdOption(prop);
-				prop.store(new FileOutputStream(currentFilePathInUse), "jdbc:db2://<IPADDRESS>:<PORT>/DSNA:currentSchema=<SchemaName>;");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (inputStream != null)
-					inputStream.close();
-				if (fw != null)
-					fw.close();
-			} catch (IOException ioe) {
-			}
-		}
-		if (openingFirstTime)
-			System.exit(0);
-
-		InputStream db2ErrorCodeInputStream = DBQueryComponent.class.getClassLoader().getResourceAsStream("db2ErrorCode.properties");
-		try {
-			prop.load(db2ErrorCodeInputStream);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (db2ErrorCodeInputStream != null) {
-					db2ErrorCodeInputStream.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		try {
-			InetAddress addr;
-			addr = InetAddress.getLocalHost();
-			hostname = addr.getHostName();
-			if (hostname != null && hostname.length() >= 1) {
-				hostname = hostname.substring(5, hostname.length() - 1);
-				hostname += " to ";
-			}
-		} catch (Exception exp) {
-			exp.printStackTrace();
-			hostname = "to ";
-		}
-	}
-
-	public static void replace(String newstring, File in, File out) throws IOException {
-
-		BufferedReader reader = new BufferedReader(new FileReader(in));
-		PrintWriter writer = new PrintWriter(new FileWriter(out));
-		String line = null;
-		while ((line = reader.readLine()) != null)
-			writer.println(line.replaceAll("MYDACID", newstring));
-
-		// I'm aware of the potential for resource leaks here. Proper resource
-		// handling has been omitted in the interest of brevity
-		reader.close();
-		writer.close();
-	}
 	private class ButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -230,7 +125,8 @@ public class DBQueryComponent extends JFrame {
 		}
 	}
 	public DBQueryComponent() {
-		super("Welcome " + hostname + "New Heights Query");
+		super("DB Tool");
+		DBQueryUtil.authenticateUserAndLoadProperties(prop);
 		mainTitle = getTitle();
 		setLayout(new BorderLayout());
 
@@ -263,6 +159,25 @@ public class DBQueryComponent extends JFrame {
 		optionMenu.setMnemonic(KeyEvent.VK_O);
 		menuBar.add(optionMenu);
 
+		JMenu helpMenu = new JMenu("Help");
+		helpMenu.setMnemonic(KeyEvent.VK_H);
+		menuBar.add(helpMenu);
+
+		JMenuItem aboutItem = new JMenuItem("About");
+		aboutItem.setMnemonic(KeyEvent.VK_A);
+		helpMenu.add(aboutItem);
+
+		aboutItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Copyrights \u00a9 2014 By Jayram Rout.",
+								"About DB Tool",
+								JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		
 		final JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem("Query Name Needed");
 		cbMenuItem.setSelected(false);
 		optionMenu.add(cbMenuItem);
@@ -534,7 +449,7 @@ public class DBQueryComponent extends JFrame {
 		add(mainPanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		codeEditor.setContentType("text/sql");
-		codeEditor.setText(initialMessage);
+		codeEditor.setText(DBQueryUtil.getInitialMessage());
 
 		submitButton.addActionListener(new ActionListener() {
 			@Override
@@ -544,8 +459,17 @@ public class DBQueryComponent extends JFrame {
 				performAction();
 			}
 		});
+		setIcon();
 	}
-
+	private void setIcon() {
+		Image img = null;
+		try {
+			img = ImageIO.read(getClass().getResource("/RunImage.png"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		setIconImage(img);
+	}
 	/**
 	 * 
 	 */
@@ -743,13 +667,13 @@ public class DBQueryComponent extends JFrame {
 							TreeView tv = new TreeView();
 							JTree treePane = tv.getTreeView(model.getValueAt(row, column) + "");
 							final JScrollPane editorScrollPane = new JScrollPane(treePane);
-							
-							if(treePane == null ) {
+
+							if (treePane == null) {
 								editorScrollPane.setViewportView(cellEditor);
 								cellEditor.setContentType("text/xml");
 								cellEditor.setText(model.getValueAt(row, column) + "");
 							}
-							
+
 							editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 							editorScrollPane.setPreferredSize(new Dimension(1100, 500));
 
@@ -870,40 +794,56 @@ public class DBQueryComponent extends JFrame {
 	 */
 	private void createNodes(DefaultMutableTreeNode top) {
 		DefaultMutableTreeNode schemaTree = null;
-		DefaultMutableTreeNode column = null;
+		DefaultMutableTreeNode columnTreeNode = null;
 		// File file = null;
 		// String fileName = "NHSchemas.json";
-		InputStream inputStream = null;
+		// InputStream inputStream = null;
 		String customTables = prop.getProperty("custom_tables");
 		if (customTables != null)
-			customTables = customTables.trim();
+			customTables = customTables.toLowerCase().trim();
 
 		try {
 
 			// Code for custom Schema
 			DefaultMutableTreeNode customSchemaName = new DefaultMutableTreeNode("CUSTOM");
 			top.add(customSchemaName);
-			inputStream = DBQueryComponent.class.getClassLoader().getResourceAsStream("NHSchemas.json");
-			ObjectMapper mapper = new ObjectMapper();
-			DataBase dataBase = mapper.readValue(inputStream, DataBase.class);
+			// inputStream =
+			// DBQueryComponent.class.getClassLoader().getResourceAsStream("NHSchemas.json");
+			
+			String refreshSchma = prop.getProperty("refresh_schema");
+			DataBase dataBase = null;
+			if(refreshSchma == null || refreshSchma.equals("true")){
+				dataBase = ResultModel.generateSchemaObject(prop.getProperty("dbschemaQuery"));
+				File file = new File(System.getProperty("user.dir") + DBContants.CONFIG_FILE_NAME);
+				Properties newProp = new Properties();
+				newProp.load(new FileInputStream(file));
+				newProp.setProperty("refresh_schema", "false");
+				newProp.store(new FileOutputStream(file), "jdbc:db2://<IPADDRESS>:<PORT>/DSNA:currentSchema=<SchemaName>;");
+			}else {
+				File file = new File(System.getProperty("user.dir") + DBContants.SCHEMA_FILE_NAME);
+				ObjectMapper mapper = new ObjectMapper();
+				dataBase = mapper.readValue(file,DataBase.class);
+			}
+//			DataBase dataBase = ResultModel.generateSchemaObject();// mapper.readValue(inputStream,
+															// DataBase.class);
 			List<Schema> schemas = dataBase.getSchemas();
 			for (Schema schema : schemas) {
 				String schemaName = schema.getName();
 				schemaTree = new DefaultMutableTreeNode(schemaName);
-				List<Table> tables = schema.getTables();
-				for (Table mytable : tables) {
-					String tableName = mytable.getName();
-					DefaultMutableTreeNode tableTree = new DefaultMutableTreeNode(tableName);
-					List<Column> columns = mytable.getColumns();
-					for (Column mycolumn : columns) {
-						column = new DefaultMutableTreeNode(new Column(mycolumn.getName(), mycolumn.getDisplaySize(), mycolumn.getTypeName()));
-						tableTree.add(column);
-						schemaTree.add(tableTree);
-
-						// This is only for Custom table
-						if ("ANIC01TC".equals(schemaName) && customTables.contains(tableName)) {
-							customSchemaName.add(tableTree);
-						}
+				List<Table> tableList = schema.getTables();
+				for (Table table : tableList) {
+					String tableName = table.getName();
+					DefaultMutableTreeNode tableTreeNode = new DefaultMutableTreeNode(tableName);
+					schemaTree.add(tableTreeNode);
+					
+					if ("ANIC01TC".equals(schemaName) && customTables.contains(tableName.toLowerCase().trim())) {
+						customSchemaName.add(tableTreeNode);
+					}
+					
+					List<Column> columnList = table.getColumns();
+					for (Column column : columnList) {
+						columnTreeNode = new DefaultMutableTreeNode(new Column(column.getName(), column.getDisplaySize(), column.getTypeName()));
+						tableTreeNode.add(columnTreeNode);
 					}
 				}
 				top.add(schemaTree);
