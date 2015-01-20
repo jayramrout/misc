@@ -66,7 +66,9 @@ $( document ).ready(function() {
 				 } 
 			 }
 		}
-		
+		$('#goto_table').click(function() {
+			window.location = "table.html"; 
+		});
 		$('#reset_table').click(function(){
 			$('#dynamictable').empty();
 			$.APP.startTimer('sw');
@@ -98,15 +100,15 @@ $( document ).ready(function() {
 		<div style="margin-top: 1%;"></div>
 		<div align="center">
 			<table align="center" >
-			  <tr>
+			  <!-- <tr>
 			    <td><span class='input-group-addon'>Enter Name</span></td>
 			    <td><input type="text" name="name" class='form-control' ></td>
 			    <td width="70px;"></td>
 			    <td>
-			    <!-- <span class='input-group-addon'>Stopwatch</span> -->
-			    <!-- <button id="sw_start" type="button" class="btn btn-primary" >Start</button> -->
+			    <span class='input-group-addon'>Stopwatch</span>
+			    <button id="sw_start" type="button" class="btn btn-primary" >Start</button>
 			    </td>
-			  </tr>
+			  </tr> -->
 			  <tr>
 			    <td><span class='input-group-addon'>Range From</span></td>
 			    <td><input type="tel" id="range_from" placeholder="1-100">To <input type="tel" id="range_to" placeholder="1-100"></td>
@@ -139,6 +141,10 @@ $( document ).ready(function() {
 		 		  <td>
 				  		<button id="reset_table" type="button" class="btn btn-primary" >Start</button>
 				  		<button id="validate" type="button" class="btn btn-danger">Validate</button>
+				  </td>
+				  <td width="100px;"></td>
+				  <td>
+				  		<button id="goto_table" type="button" class="btn btn-primary">Table</button>
 				  </td>
 			  </tr>
 			</table>
