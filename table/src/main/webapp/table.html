@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>Dynamically create input fields- jQuery</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/stopwatch.js"></script>
+<script type="text/javascript" src="js/randomArrayGenerator.js"></script>
+<style type="text/css">
+	.redBackground {
+		background-color: red;
+	}
+/* input {
+    padding:4px;}
+ */
+/* 
+input[type="text"] {
+    width:50px;
+    text-align:center;}    
+ */
+
+div span:last-child {
+color:green;}
+
+h1 {
+    font-size:14px;
+    margin:0 0 8px 0;
+}
+
+</style>
+
+<script type="text/javascript">
+$( document ).ready(function() {
+	$('#goto_compute').click(function() {
+		window.location = "index.html"; 
+	});
+	
+		$('#reset_table').click(function(){
+			
+			$('#dynamictable').empty();
+			var rangeFrom = parseInt($('#table_value').val());
+			if (isNaN(rangeFrom)) {
+				rangeFrom = 1;
+			}
+			
+			$('#dynamictable').append('<table></table>');
+			var table = $('#dynamictable').children();
+			var row;
+			 
+			for (var idx = 0; idx < 11 ; idx++) {
+				row = $('<tr></tr>').appendTo(table);
+				 var td = $('<td></td>');
+				 var div = "<div class='input-group'>"+
+				  "<span class='input-group-addon'>"+rangeFrom +"X" + idx +" =</span>"+
+				  "<input type='tel' maxlength='3' value='"+(rangeFrom * idx)+"' class='form-control' style='width : 35%'>"+
+				 "</div>";
+				 td.html(div).appendTo(row);
+			 }
+		});
+    });
+</script>
+
+</head>
+<body>
+	<form action="/SubmitWork">
+		<div style="margin-top: 1%;"></div>
+		<div align="center">
+			<table align="center" >
+			  <tr>
+			    <td><span class='input-group-addon'>Table #</span></td>
+			    <td><input type="tel" id="table_value" placeholder="1-100"></td>
+			  </tr>
+			</table>
+		</div>
+		<div style="margin-top: 1%;"></div>
+		<div id="dynamictable" style="margin-left: 5%; margin-right: 5%;" align="center" >
+		</div>
+		<div style="margin-top: 1%;"></div>
+		<div align="center" > 
+			<table>
+				<tr>
+		 		  <td>
+				  		<button id="reset_table" type="button" class="btn btn-primary" >Go</button>
+				  </td>
+				  <td width="100px;"></td>
+				  <td>
+				  		<button id="goto_compute" type="button" class="btn btn-primary">Compute</button>
+				  </td>
+			  </tr>
+			</table>
+		</div>
+	</form>
+</body>
+</html>
