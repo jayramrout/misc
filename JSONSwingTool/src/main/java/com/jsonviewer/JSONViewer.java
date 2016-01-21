@@ -242,7 +242,7 @@ public class JSONViewer extends JFrame implements ActionListener {
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				JOptionPane.showMessageDialog(null,
-						"Copyrights \u00a9 2014 By Jayram Rout. \n Email : jayram.rout@7chapters.info",
+						"Copyrights \u00a9 2016 By Jayram Rout. \n Email : jayram.rout@7chapters.info",
 						"About Json Tool", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
