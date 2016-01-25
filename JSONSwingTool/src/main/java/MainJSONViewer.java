@@ -1,7 +1,7 @@
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.jsonviewer.JSONViewer;
+import com.jrout.jsonviewer.JSONViewer;
 
 /**
  * @author Jayram Rout
