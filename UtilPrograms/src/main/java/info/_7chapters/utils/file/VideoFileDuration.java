@@ -23,16 +23,13 @@ public class VideoFileDuration {
 		
 		IContainer container = IContainer.make();
 		List<String> list = new ArrayList<String>();
-		File directory = new File("F:\\MyDocuments\\Studies\\H2K\\Batch20-Oct20-2015");
-		File [] files = directory.listFiles(new FilenameFilter() {
-			
-			public boolean accept(File dir, String name) {
-				return name.toLowerCase().endsWith(".wmv");
-			}
-		});
+		File directory = new File("F:\\MyDocuments\\Studies\\H2K\\Batch22-March29-2016");
+		File [] files = directory.listFiles((dir, name) -> {
+            return name.toLowerCase().endsWith(".wmv");
+        });
 		GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("US/Eastern"));
 //	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS",Locale.US);
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+	    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.US);
 	    
 	    long totalMinutes = 0;
 	    for(File file : files) {
@@ -42,7 +39,7 @@ public class VideoFileDuration {
 			Path path = Paths.get(file.getAbsolutePath());
 			BasicFileAttributes view = Files.readAttributes(path, BasicFileAttributes.class);
 		    calendar.setTimeInMillis(view.creationTime().toMillis());
-		    list.add(timeInMinutes+"\t" + sdf.format(calendar.getTime()) +"\t"+file.getName());
+		    list.add(sdf.format(calendar.getTime()) + "\t"+timeInMinutes+"\t" + file.getName());
 		    totalMinutes += timeInMinutes;
 		}
 		
