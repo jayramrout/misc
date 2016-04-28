@@ -147,7 +147,7 @@ public class Helper {
             } else if (val instanceof JSONArray) {
                 retVal.add(getListFromJSONArray((JSONArray) val));
             } else {
-                retVal.add(array.getString(i));
+                retVal.add(array.get(i));
             }
         }
         return retVal;
