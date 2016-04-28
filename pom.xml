@@ -12,8 +12,6 @@
         </properties>
     <modules>
         <module>UtilPrograms</module>
-        <module>JSONSwingTool</module>
-        <module>JSONMvcTool</module>
     </modules>
     <build>
         <plugins>
