@@ -8,11 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import com.xuggle.xuggler.IContainer;
@@ -23,14 +19,12 @@ public class VideoFileDuration {
 		
 		IContainer container = IContainer.make();
 		List<String> list = new ArrayList<String>();
-		File directory = new File("F:\\MyDocuments\\Studies\\H2K\\Batch22-March29-2016");
-		File [] files = directory.listFiles((dir, name) -> {
-            return name.toLowerCase().endsWith(".wmv");
-        });
+		File directory = new File("/Users/jrout/Documents/My-Documents/H2KInfosys/Videos/Batch27Videos");
+		File [] files = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".wmv") || name.toLowerCase().endsWith(".mp4"));
 		GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("US/Eastern"));
 //	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS",Locale.US);
 	    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy",Locale.US);
-	    
+		Arrays.sort(files);
 	    long totalMinutes = 0;
 	    for(File file : files) {
 			container.open(file.getAbsolutePath(), IContainer.Type.READ, null);
