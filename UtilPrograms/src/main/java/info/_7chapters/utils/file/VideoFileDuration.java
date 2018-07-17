@@ -36,7 +36,7 @@ public class VideoFileDuration {
 		    list.add(sdf.format(calendar.getTime()) + "\t"+timeInMinutes+"\t" + file.getName());
 		    totalMinutes += timeInMinutes;
 		}
-		
+		// New Change
 		for(String detail : list){
 			System.out.println(detail);
 		}
